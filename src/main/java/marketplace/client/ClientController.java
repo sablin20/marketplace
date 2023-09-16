@@ -1,7 +1,6 @@
 package marketplace.client;
 
 import lombok.Data;
-import marketplace.customexception.CustomException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,26 +10,25 @@ import org.springframework.web.bind.annotation.*;
 public class ClientController {
 
     private JdbcTemplate jdbcTemplate;
-    private ClientRepository clientRepository;
 
     @PostMapping("/create")
-    public void create(@RequestBody Client client) {
-        clientRepository.save(client);
+    public String create(@RequestBody Client client) {
+        jdbcTemplate.update("INSERT INTO Client VALUES (?,?,?)",
+                client.getId(), client.getName(), client.getLast_name());
+        return "Client " + client + " create! Good job!";
     }
 
     @DeleteMapping("/delete")
-    public void remove(@RequestParam("id") String id) {
-        clientRepository.deleteById(id);
+    public String remove(@RequestParam("id") String id) {
+        jdbcTemplate.update("DELETE FROM Client WHERE id = ?",  id);
+        return "Client id: " + id + " remove! Good job!";
     }
 
-    @PostMapping("/update")
-    public Client update(@RequestBody Client client) {
-        clientRepository.save(client);
+    @GetMapping("/find")
+    public Client findById(@RequestParam("id") String id) {
+        var client = jdbcTemplate.queryForObject("SELECT * FROM Client WHERE id = ?",
+                Client.class, id);
         return client;
     }
 
-    @GetMapping("/")
-    public Client findById(@RequestParam("id") String id) {
-        return clientRepository.find(id).orElseThrow(() -> new CustomException(String.format("Client by id: %s not found", id)));
-    }
 }

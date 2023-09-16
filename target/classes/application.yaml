@@ -11,7 +11,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     hibernate:
-      ddl-auto: create # позволяет создавать таблицу
+      ddl-auto: create-drop # позволяет создавать таблицу
       # при запуске приложения на основе нашего Entity класса
     show-sql: true
   sql:
