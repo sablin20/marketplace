@@ -4,19 +4,8 @@ spring:
     username: postgres
     password: eSeNia300721
     driver-class-name: org.postgresql.Driver
-  jpa:
-    defer-datasource-initialization: true # позволяет инициализировать таблицу с помощью файла data.sql
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
-    hibernate:
-      ddl-auto: create-drop # позволяет создавать таблицу
-      # при запуске приложения на основе нашего Entity класса
-    show-sql: true
   sql:
     init:
       mode: always # настраивает создание схемы БД
-
 server:
   port: 8888

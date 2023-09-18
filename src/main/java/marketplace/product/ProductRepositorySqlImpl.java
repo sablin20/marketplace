@@ -10,12 +10,7 @@ import java.util.List;
 @Repository
 public class ProductRepositorySqlImpl implements ProductRepository {
 
-    private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public ProductRepositorySqlImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    private JdbcTemplate jdbcTemplate;
 
     private void validValue(List<Product> product) {
         if (product.size() == 0) {

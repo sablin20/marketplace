@@ -11,13 +11,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class StoreRepositorySqlImpl implements StoreRepository {
 
-    private final JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
     private ProductRepositorySqlImpl productRepositorySql;
-
-    @Autowired
-    public StoreRepositorySqlImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     @Override
     public String create(Store store) {

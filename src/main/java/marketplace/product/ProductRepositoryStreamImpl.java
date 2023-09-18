@@ -12,12 +12,7 @@ import java.util.stream.Collectors;
 @Repository
 public class ProductRepositoryStreamImpl implements ProductRepository{
 
-    private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public ProductRepositoryStreamImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    private JdbcTemplate jdbcTemplate;
 
     /**
      * @return специальный метод, который возвращает список товаров, по нему будем искать подходящие товары с помощью Stream API

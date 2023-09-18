@@ -4,7 +4,6 @@ import marketplace.customexception.CustomException;
 import marketplace.product.ProductRepositorySqlImpl;
 import marketplace.store.Store;
 import marketplace.store.StoreRepositorySqlImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -12,14 +11,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ClientRepositorySqlImpl implements ClientRepository {
 
-    private final JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
     private ProductRepositorySqlImpl productRepositorySql;
     private StoreRepositorySqlImpl storeRepositorySql;
-
-    @Autowired
-    public ClientRepositorySqlImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     @Override
     public String create(Client client) {
