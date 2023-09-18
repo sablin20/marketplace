@@ -1,77 +1,88 @@
 package marketplace.product;
 
 import lombok.Data;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @Data
 @RestController
 @RequestMapping("/product")
 public class ProductController {
 
-    private JdbcTemplate jdbcTemplate;
+    private ProductRepositorySqlImpl repositorySql;
+
+    @PostMapping("/create")
+    public void create(@RequestBody Product product) {
+        repositorySql.create(product);
+    }
+
+    @DeleteMapping("/remove")
+    public String removeById(@RequestParam("id") String id) {
+        return repositorySql.removeById(id);
+    }
+
+    @GetMapping("/find")
+    public Product findById(@RequestParam("/id") String id) {
+        return repositorySql.findById(id);
+    }
 
     @GetMapping("/category")
-    public Product findByCategory(@RequestParam("category") String category) {
-        var product = jdbcTemplate.queryForObject(
-                "SELECT category FROM Product WHERE category LIKE '%?%'",
-                Product.class,  category.toUpperCase());
-        return product;
+    public List<Product> findByCategory(@RequestParam("category") String category,
+                                        @RequestParam(required = false, value = "sorted") String sorted,
+                                        @RequestParam(required = false, value = "price") String price) {
+        return repositorySql.findByCategory(category, sorted, price);
     }
 
     @GetMapping("/categoryAndBrand")
-    public Product findByCategoryAndBrand(@RequestParam("category") String category,
-                                          @RequestParam("brand") String brand) {
-        var product = jdbcTemplate.queryForObject(
-                "SELECT category, brand FROM Product WHERE category LIKE '%?%' AND brand LIKE '%?%'",
-                Product.class, category.toUpperCase(), brand.toUpperCase());
-        return product;
+    public List<Product> findByCategoryAndBrand(@RequestParam("category") String category,
+                                          @RequestParam("brand") String brand,
+                                          @RequestParam(required = false, value = "sorted") String sorted,
+                                          @RequestParam(required = false, value = "price") String price) {
+        return repositorySql.findByCategoryAndBrand(category, brand, sorted, price);
     }
 
     @GetMapping("/categoryAndName")
-    public Product findByCategoryAndName(@RequestParam("category") String category,
-                                         @RequestParam("name") String name) {
-        var product = jdbcTemplate.queryForObject(
-                "SELECT category, name FROM Product WHERE category LIKE '%?%' AND name LIKE '%?%'",
-                Product.class, category.toUpperCase(), name);
-        return product;
+    public List<Product> findByCategoryAndName(@RequestParam("category") String category,
+                                         @RequestParam("name") String name,
+                                         @RequestParam(required = false, value = "sorted") String sorted,
+                                         @RequestParam(required = false, value = "price") String price) {
+        return repositorySql.findByCategoryAndName(category, name, sorted, price);
     }
 
     @GetMapping("/categoryAndNameAndBrand")
-    public Product findByCategoryAndNameAndBrand(@RequestParam("category") String category,
+    public List<Product> findByCategoryAndNameAndBrand(@RequestParam("category") String category,
                                                  @RequestParam("name") String name,
-                                                 @RequestParam("brand") String brand) {
-        var product = jdbcTemplate.queryForObject(
-                "SELECT category, name, brand FROM Product WHERE category LIKE '%?%' AND name LIKE '%?%' AND brand LIKE '%?%'",
-                Product.class, category.toUpperCase(), name, brand.toUpperCase());
-        return product;
+                                                 @RequestParam("brand") String brand,
+                                                 @RequestParam(required = false, value = "sorted") String sorted,
+                                                 @RequestParam(required = false, value = "price") String price) {
+        return repositorySql.findByCategoryAndNameAndBrand(category, name, brand, sorted, price);
     }
 
     @GetMapping("/brand")
-    public Product findByBrand(@RequestParam("brand") String brand) {
-        var product = jdbcTemplate.queryForObject(
-                "SELECT brand FROM Product WHERE brand LIKE '%?%'",
-                Product.class, brand.toUpperCase());
-        return product;
+    public List<Product> findByBrand(@RequestParam("brand") String brand,
+                               @RequestParam(required = false, value = "sorted") String sorted,
+                               @RequestParam(required = false, value = "price") String price) {
+        return repositorySql.findByBrand(brand, sorted, price);
     }
 
     @GetMapping("/brandAndName")
-    public Product findByBrandAndName(@RequestParam("brand") String brand,
-                                      @RequestParam("name") String name) {
-        var product = jdbcTemplate.queryForObject(
-                "SELECT brand, name FROM Product WHERE brand LIKE '%?%' AND name LIKE '%?%'",
-                Product.class, brand.toUpperCase(), name);
-        return product;
+    public List<Product> findByBrandAndName(@RequestParam("brand") String brand,
+                                      @RequestParam("name") String name,
+                                      @RequestParam(required = false, value = "sorted") String sorted,
+                                      @RequestParam(required = false, value = "price") String price) {
+        return repositorySql.findByBrandAndName(brand, name, sorted, price);
     }
 
     @GetMapping("/name")
-    public Product findByName(@RequestParam("name") String name) {
-        var product = jdbcTemplate.queryForObject(
-                "SELECT name FROM Product WHERE name LIKE '%?%'",
-                Product.class, name);
-        return product;
+    public List<Product> findByName(@RequestParam("name") String name,
+                              @RequestParam(required = false, value = "sorted") String sorted,
+                              @RequestParam(required = false, value = "price") String price) {
+        return repositorySql.findByName(name, sorted, price);
+    }
+
+    @GetMapping("/between")
+    public List<Product> findByPriceInBetween(@RequestParam("price1") int price1,
+                                        @RequestParam("price2") int price2) {
+        return repositorySql.findByPriceInBetween(price1, price2);
     }
 }

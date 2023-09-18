@@ -1,0 +1,25 @@
+CREATE TABLE Product (
+ id VARCHAR(1000) PRIMARY KEY NOT NULL,
+ name VARCHAR(100) NOT NULL,
+ price INT NOT NULL,
+ category VARCHAR(20) NOT NULL,
+ brand VARCHAR(30) NOT NULL,
+ amount INT
+);
+
+CREATE TABLE Store (
+   id VARCHAR(1000) PRIMARY KEY NOT NULL,
+   name VARCHAR(100) NOT NULL,
+   products VARCHAR(1000),
+   FOREIGN KEY (products) REFERENCES Product(id)
+);
+
+CREATE TABLE Client (
+    id VARCHAR(1000) PRIMARY KEY NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    favorites VARCHAR(1000),
+    history VARCHAR(1000),
+    FOREIGN KEY (favorites) REFERENCES Product(id),
+    FOREIGN KEY (history) REFERENCES Product(id)
+);

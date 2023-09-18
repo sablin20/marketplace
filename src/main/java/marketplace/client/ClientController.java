@@ -1,34 +1,44 @@
 package marketplace.client;
 
-import lombok.Data;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
-@Data
 @RestController
 @RequestMapping("/client")
 public class ClientController {
 
-    private JdbcTemplate jdbcTemplate;
+    private ClientRepositorySqlImpl repositorySql;
 
     @PostMapping("/create")
     public String create(@RequestBody Client client) {
-        jdbcTemplate.update("INSERT INTO Client VALUES (?,?,?)",
-                client.getId(), client.getName(), client.getLast_name());
-        return "Client " + client + " create! Good job!";
+        return repositorySql.create(client);
     }
 
     @DeleteMapping("/delete")
     public String remove(@RequestParam("id") String id) {
-        jdbcTemplate.update("DELETE FROM Client WHERE id = ?",  id);
-        return "Client id: " + id + " remove! Good job!";
+        return repositorySql.removeById(id);
     }
 
     @GetMapping("/find")
     public Client findById(@RequestParam("id") String id) {
-        var client = jdbcTemplate.queryForObject("SELECT * FROM Client WHERE id = ?",
-                Client.class, id);
-        return client;
+        return repositorySql.findById(id);
+    }
+
+    @PostMapping("/buy")
+    public String buyProduct(@RequestParam("clientId") String clientId,
+                             @RequestParam("productId") String productId) {
+        return repositorySql.buyProduct(clientId, productId);
+    }
+
+    @PostMapping("/addFavorites")
+    public String addToFavorites(@RequestParam("clientId") String clientId,
+                                 @RequestParam("productId") String productId) {
+        return repositorySql.addToFavorites(clientId, productId);
+    }
+
+    @DeleteMapping("/removeFavorites")
+    public String removeFromFavorites(@RequestParam("clientId") String clientId,
+                                      @RequestParam("productId") String productId) {
+        return repositorySql.removeFromFavorites(clientId, productId);
     }
 
 }
