@@ -7,34 +7,33 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/store")
 public class StoreController {
 
-    private StoreRepositorySqlImpl repositorySql;
+    private StoreRepository storeRepository;
 
     @GetMapping("/find")
     public Store findById(@RequestParam("id") String id) {
-        return repositorySql.findById(id);
+        return storeRepository.findById(id);
     }
 
     @PostMapping("/create")
-    public String create(@RequestBody Store store) {
-        return repositorySql.create(store);
+    public Store create(@RequestBody Store store) {
+        return storeRepository.create(store);
     }
 
     @PostMapping("/addProducts")
-    public String addProductForSale(@RequestParam("storeId") String storeId,
+    public void addProductForSale(@RequestParam("storeId") String storeId,
                                     @RequestParam("productId") String productId) {
-        return repositorySql.addProductForSale(storeId, productId);
+        storeRepository.addProductForSale(storeId, productId);
     }
 
     @DeleteMapping("/removeProduct")
-    public String deleteProductSales(@RequestParam("storeId") String storeId,
+    public void deleteProductSales(@RequestParam("storeId") String storeId,
                                      @RequestParam("productId") String productId) {
-        return repositorySql.deleteProductSales(storeId, productId);
+        storeRepository.deleteProductSales(storeId, productId);
     }
 
     @PutMapping("/updateProduct")
-    public String updateProducts(@RequestParam("storeId") String storeId,
+    public void updateProducts(@RequestParam("storeId") String storeId,
                                  @RequestBody Product product) {
-        return repositorySql.updateProducts(storeId, product);
+        storeRepository.updateProducts(storeId, product);
     }
-
 }

@@ -1,18 +1,18 @@
 package marketplace.product;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import marketplace.store.Store;
+import java.math.BigDecimal;
+import java.util.List;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class Product {
 
     private String id;
     private String name;
-    private int price;
+    private BigDecimal price;
     private String category;
     private String brand;
     private int amount;
+    private List<Store> stores;
 }

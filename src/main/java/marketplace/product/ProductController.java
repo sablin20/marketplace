@@ -1,88 +1,42 @@
 package marketplace.product;
 
-import lombok.Data;
 import org.springframework.web.bind.annotation.*;
+import java.math.BigDecimal;
 import java.util.List;
 
-@Data
 @RestController
 @RequestMapping("/product")
 public class ProductController {
 
-    private ProductRepositorySqlImpl repositorySql;
+    private ProductRepository repository;
 
     @PostMapping("/create")
     public void create(@RequestBody Product product) {
-        repositorySql.create(product);
+        repository.create(product);
     }
 
     @DeleteMapping("/remove")
-    public String removeById(@RequestParam("id") String id) {
-        return repositorySql.removeById(id);
+    public void removeById(@RequestParam("id") String id) {
+        repository.removeById(id);
     }
 
-    @GetMapping("/find")
-    public Product findById(@RequestParam("/id") String id) {
-        return repositorySql.findById(id);
+    @GetMapping("/findById")
+    public Product findById(@RequestParam("id") String id) {
+        return repository.findById(id);
     }
 
-    @GetMapping("/category")
-    public List<Product> findByCategory(@RequestParam("category") String category,
-                                        @RequestParam(required = false, value = "sorted") String sorted,
-                                        @RequestParam(required = false, value = "price") String price) {
-        return repositorySql.findByCategory(category, sorted, price);
+    @GetMapping("/findProducts")
+    public List<Product> findProducts(@RequestParam(required = false, value = "category") String category,
+                                      @RequestParam(required = false, value = "name") String name,
+                                      @RequestParam(required = false, value = "brand") String brand,
+                                      @RequestParam(required = false, value = "sortedName") String sortedName,
+                                      @RequestParam(required = false, value = "sortedPrice") String sortedPrice) {
+        return repository.findProducts(category, name, brand, sortedName, sortedPrice);
     }
 
-    @GetMapping("/categoryAndBrand")
-    public List<Product> findByCategoryAndBrand(@RequestParam("category") String category,
-                                          @RequestParam("brand") String brand,
-                                          @RequestParam(required = false, value = "sorted") String sorted,
-                                          @RequestParam(required = false, value = "price") String price) {
-        return repositorySql.findByCategoryAndBrand(category, brand, sorted, price);
-    }
-
-    @GetMapping("/categoryAndName")
-    public List<Product> findByCategoryAndName(@RequestParam("category") String category,
-                                         @RequestParam("name") String name,
-                                         @RequestParam(required = false, value = "sorted") String sorted,
-                                         @RequestParam(required = false, value = "price") String price) {
-        return repositorySql.findByCategoryAndName(category, name, sorted, price);
-    }
-
-    @GetMapping("/categoryAndNameAndBrand")
-    public List<Product> findByCategoryAndNameAndBrand(@RequestParam("category") String category,
-                                                 @RequestParam("name") String name,
-                                                 @RequestParam("brand") String brand,
-                                                 @RequestParam(required = false, value = "sorted") String sorted,
-                                                 @RequestParam(required = false, value = "price") String price) {
-        return repositorySql.findByCategoryAndNameAndBrand(category, name, brand, sorted, price);
-    }
-
-    @GetMapping("/brand")
-    public List<Product> findByBrand(@RequestParam("brand") String brand,
-                               @RequestParam(required = false, value = "sorted") String sorted,
-                               @RequestParam(required = false, value = "price") String price) {
-        return repositorySql.findByBrand(brand, sorted, price);
-    }
-
-    @GetMapping("/brandAndName")
-    public List<Product> findByBrandAndName(@RequestParam("brand") String brand,
-                                      @RequestParam("name") String name,
-                                      @RequestParam(required = false, value = "sorted") String sorted,
-                                      @RequestParam(required = false, value = "price") String price) {
-        return repositorySql.findByBrandAndName(brand, name, sorted, price);
-    }
-
-    @GetMapping("/name")
-    public List<Product> findByName(@RequestParam("name") String name,
-                              @RequestParam(required = false, value = "sorted") String sorted,
-                              @RequestParam(required = false, value = "price") String price) {
-        return repositorySql.findByName(name, sorted, price);
-    }
-
-    @GetMapping("/between")
-    public List<Product> findByPriceInBetween(@RequestParam("price1") int price1,
-                                        @RequestParam("price2") int price2) {
-        return repositorySql.findByPriceInBetween(price1, price2);
+    @GetMapping("/priceBetween")
+    public List<Product> findByPriceInBetween(@RequestParam("firstPrice") BigDecimal firstPrice,
+                                              @RequestParam("lastPrice") BigDecimal lastPrice) {
+        return repository.findByPriceInBetween(firstPrice, lastPrice);
     }
 }

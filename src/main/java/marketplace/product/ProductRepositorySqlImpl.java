@@ -1,27 +1,32 @@
 package marketplace.product;
 
-import marketplace.customexception.CustomException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import marketplace.customexception.NoSuchProduct;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import java.math.BigDecimal;
 import java.util.List;
 
+@Data
 @Repository
+@RequiredArgsConstructor
 public class ProductRepositorySqlImpl implements ProductRepository {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     private void validValue(List<Product> product) {
         if (product.size() == 0) {
-            throw new CustomException("No Products by this parameters");
+            throw new NoSuchProduct("No Products by this parameters");
         }
     }
 
     @Override
-    public void create(Product product) {
+    public Product create(Product product) {
         jdbcTemplate.update("INSERT INTO Product VALUES (?,?,?,?,?,?)",
                 product.getId(), product.getName(), product.getPrice(), product.getCategory(), product.getBrand(), product.getAmount());
+        return product;
     }
 
     @Override
@@ -30,9 +35,8 @@ public class ProductRepositorySqlImpl implements ProductRepository {
     }
 
     @Override
-    public String removeById(String id) {
+    public void removeById(String id) {
         jdbcTemplate.update("DELETE FROM Product WHERE id = ?", id);
-        return "Product id: " + id + " remove! Good job!";
     }
 
     @Override
@@ -146,9 +150,10 @@ public class ProductRepositorySqlImpl implements ProductRepository {
 
     @Override
     public List<Product> findByBrandAndName(String brand, String name, String sorted, String price) {
-        
+
         var product = jdbcTemplate.query("SELECT * FROM Product WHERE brand LIKE '%?%' AND name LIKE '%?%'",
                 new BeanPropertyRowMapper<>(Product.class), brand.toUpperCase(), name);
+
         validValue(product);
 
         var sqlName = String.format("SELECT * FROM Product WHERE brand LIKE '%%?%%' name LIKE '%%?%%' ORDER BY name %s", sorted);
@@ -188,10 +193,47 @@ public class ProductRepositorySqlImpl implements ProductRepository {
     }
 
     @Override
-    public List<Product> findByPriceInBetween(int price1, int price2) {
+    public List<Product> findByPriceInBetween(BigDecimal price1, BigDecimal price2) {
         var product = jdbcTemplate.query("SELECT * FROM Product WHERE price BETWEEN ? AND ?",
                 new BeanPropertyRowMapper<>(Product.class), price1, price2);
         validValue(product);
         return product;
+    }
+
+    @Override
+    public List<Product> findProducts(String category, String name, String brand, String sortedName, String sortedPrice) {
+
+        var productDefaultList = jdbcTemplate.query("SELECT * FROM Product",
+                new BeanPropertyRowMapper<>(Product.class));
+
+        if (category != null && name != null && brand != null) {
+            return findByCategoryAndNameAndBrand(category, name, brand, sortedName, sortedPrice);
+        }
+
+        if (category != null && brand != null) {
+            return findByCategoryAndBrand(category, brand, sortedName, sortedPrice);
+        }
+
+        if (category != null && name != null) {
+            return findByCategoryAndName(category, name, sortedName, sortedPrice);
+        }
+
+        if (brand != null && name != null) {
+            return findByBrandAndName (brand, name, sortedName, sortedPrice);
+        }
+
+        if (brand != null) {
+            return findByBrand(brand, sortedName, sortedPrice);
+        }
+
+        if (name != null) {
+            return findByName(name, sortedName, sortedPrice);
+        }
+
+        if (category != null) {
+            return findByCategory(category, sortedName, sortedPrice);
+        }
+
+        return productDefaultList;
     }
 }

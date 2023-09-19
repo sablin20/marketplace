@@ -1,18 +1,21 @@
 package marketplace.product;
 
-import marketplace.customexception.CustomException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import marketplace.customexception.NoSuchProduct;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import java.util.Comparator;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Data
 @Repository
+@RequiredArgsConstructor
 public class ProductRepositoryStreamImpl implements ProductRepository{
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     /**
      * @return специальный метод, который возвращает список товаров, по нему будем искать подходящие товары с помощью Stream API
@@ -22,19 +25,19 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
     }
 
     @Override
-    public void create(Product product) {
+    public Product create(Product product) {
         jdbcTemplate.update("INSERT INTO Product VALUES (?,?,?,?,?,?)",
                 product.getId(), product.getName(), product.getPrice(), product.getCategory(), product.getBrand(), product.getAmount());
+        return product;
     }
 
     @Override
-    public String removeById(String id) {
+    public void removeById(String id) {
         var product = requestSql().stream().
                 filter(p -> p.getId().equals(id)).
                 findFirst().
-                orElseThrow(() -> new CustomException(String.format("No Product by id = %s", id)));
+                orElseThrow(() -> new NoSuchProduct(String.format("No Product by id = %s", id)));
         jdbcTemplate.update("DELETE FROM Product WHERE id = ?", product.getId());
-        return "Product by id: " + product.getId() + " remove!";
     }
 
     @Override
@@ -42,7 +45,7 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
         return requestSql().stream().
                 filter(p -> p.getId().equals(id)).
                 findFirst().
-                orElseThrow(() -> new CustomException(String.format("No Product by id = %s", id)));
+                orElseThrow(() -> new NoSuchProduct(String.format("No Product by id = %s", id)));
     }
 
     @Override
@@ -65,24 +68,14 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
         if (price.equals("DESC")) {
             return requestSql().stream().
                     filter(p -> p.getCategory().matches(category)).
-                    sorted(new Comparator<Product>() {
-                        @Override
-                        public int compare(Product o1, Product o2) {
-                            return Math.max(o1.getPrice(), o2.getPrice());
-                        }
-                    }).
+                    sorted((p1, p2) -> p2.getPrice().compareTo(p1.getPrice())).
                     collect(Collectors.toList());
         }
 
         if (price.equals("ASC")) {
             return requestSql().stream().
                     filter(p -> p.getCategory().matches(category)).
-                    sorted(new Comparator<Product>() {
-                        @Override
-                        public int compare(Product o1, Product o2) {
-                            return Math.min(o1.getPrice(), o2.getPrice());
-                        }
-                    }).
+                    sorted((p1, p2) -> p1.getPrice().compareTo(p2.getPrice())).
                     collect(Collectors.toList());
         }
 
@@ -110,24 +103,14 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
         if (price.equals("DESC")) {
             return requestSql().stream().
                     filter(p -> p.getCategory().matches(category) && p.getBrand().matches(brand)).
-                    sorted(new Comparator<Product>() {
-                        @Override
-                        public int compare(Product o1, Product o2) {
-                            return Math.max(o1.getPrice(), o2.getPrice());
-                        }
-                    }).
+                    sorted((p1, p2) -> p2.getPrice().compareTo(p1.getPrice())).
                     collect(Collectors.toList());
         }
 
         if (price.equals("ASC")) {
             return requestSql().stream().
                     filter(p -> p.getCategory().matches(category) && p.getBrand().matches(brand)).
-                    sorted(new Comparator<Product>() {
-                        @Override
-                        public int compare(Product o1, Product o2) {
-                            return Math.min(o1.getPrice(), o2.getPrice());
-                        }
-                    }).
+                    sorted((p1, p2) -> p1.getPrice().compareTo(p2.getPrice())).
                     collect(Collectors.toList());
         }
 
@@ -155,24 +138,14 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
         if (price.equals("DESC")) {
             return requestSql().stream().
                     filter(p -> p.getCategory().matches(category) && p.getName().matches(name)).
-                    sorted(new Comparator<Product>() {
-                        @Override
-                        public int compare(Product o1, Product o2) {
-                            return Math.max(o1.getPrice(), o2.getPrice());
-                        }
-                    }).
+                    sorted((p1, p2) -> p2.getPrice().compareTo(p1.getPrice())).
                     collect(Collectors.toList());
         }
 
         if (price.equals("ASC")) {
             return requestSql().stream().
                     filter(p -> p.getCategory().matches(category) && p.getName().matches(name)).
-                    sorted(new Comparator<Product>() {
-                        @Override
-                        public int compare(Product o1, Product o2) {
-                            return Math.min(o1.getPrice(), o2.getPrice());
-                        }
-                    }).
+                    sorted((p1, p2) -> p1.getPrice().compareTo(p2.getPrice())).
                     collect(Collectors.toList());
         }
 
@@ -200,24 +173,14 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
         if (price.equals("DESC")) {
             return requestSql().stream().
                     filter(p -> p.getCategory().matches(category) && p.getName().matches(name) && p.getBrand().matches(brand)).
-                    sorted(new Comparator<Product>() {
-                        @Override
-                        public int compare(Product o1, Product o2) {
-                            return Math.max(o1.getPrice(), o2.getPrice());
-                        }
-                    }).
+                    sorted((p1, p2) -> p2.getPrice().compareTo(p1.getPrice())).
                     collect(Collectors.toList());
         }
 
         if (price.equals("ASC")) {
             return requestSql().stream().
                     filter(p -> p.getCategory().matches(category) && p.getName().matches(name) && p.getBrand().matches(brand)).
-                    sorted(new Comparator<Product>() {
-                        @Override
-                        public int compare(Product o1, Product o2) {
-                            return Math.min(o1.getPrice(), o2.getPrice());
-                        }
-                    }).
+                    sorted((p1, p2) -> p1.getPrice().compareTo(p2.getPrice())).
                     collect(Collectors.toList());
         }
 
@@ -245,24 +208,14 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
         if (price.equals("DESC")) {
             return requestSql().stream().
                     filter(p -> p.getBrand().matches(brand)).
-                    sorted(new Comparator<Product>() {
-                        @Override
-                        public int compare(Product o1, Product o2) {
-                            return Math.max(o1.getPrice(), o2.getPrice());
-                        }
-                    }).
+                    sorted((p1, p2) -> p2.getPrice().compareTo(p1.getPrice())).
                     collect(Collectors.toList());
         }
 
         if (price.equals("ASC")) {
             return requestSql().stream().
                     filter(p -> p.getBrand().matches(brand)).
-                    sorted(new Comparator<Product>() {
-                        @Override
-                        public int compare(Product o1, Product o2) {
-                            return Math.min(o1.getPrice(), o2.getPrice());
-                        }
-                    }).
+                    sorted((p1, p2) -> p1.getPrice().compareTo(p2.getPrice())).
                     collect(Collectors.toList());
         }
 
@@ -288,24 +241,14 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
         if (price.equals("DESC")) {
             return requestSql().stream().
                     filter(p -> p.getName().matches(name)).
-                    sorted(new Comparator<Product>() {
-                        @Override
-                        public int compare(Product o1, Product o2) {
-                            return Math.max(o1.getPrice(), o2.getPrice());
-                        }
-                    }).
+                    sorted((p1, p2) -> p2.getPrice().compareTo(p1.getPrice())).
                     collect(Collectors.toList());
         }
 
         if (price.equals("ASC")) {
             return requestSql().stream().
                     filter(p -> p.getName().matches(name)).
-                    sorted(new Comparator<Product>() {
-                        @Override
-                        public int compare(Product o1, Product o2) {
-                            return Math.min(o1.getPrice(), o2.getPrice());
-                        }
-                    }).
+                    sorted().
                     collect(Collectors.toList());
         }
 
@@ -324,31 +267,21 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
         if (sorted.equals("ASC")) {
             return requestSql().stream().
                     filter(p -> p.getBrand().matches(brand) && p.getName().matches(name)).
-                    sorted().
+                    sorted((p, p1) -> p.getPrice().compareTo(p1.getPrice())).
                     collect(Collectors.toList());
         }
 
         if (price.equals("DESC")) {
             return requestSql().stream().
                     filter(p -> p.getBrand().matches(brand) && p.getName().matches(name)).
-                    sorted(new Comparator<Product>() {
-                        @Override
-                        public int compare(Product o1, Product o2) {
-                            return Math.max(o1.getPrice(), o2.getPrice());
-                        }
-                    }).
+                    sorted((p1, p2) -> p2.getPrice().compareTo(p1.getPrice())).
                     collect(Collectors.toList());
         }
 
         if (price.equals("ASC")) {
             return requestSql().stream().
                     filter(p -> p.getBrand().matches(brand) && p.getName().matches(name)).
-                    sorted(new Comparator<Product>() {
-                        @Override
-                        public int compare(Product o1, Product o2) {
-                            return Math.min(o1.getPrice(), o2.getPrice());
-                        }
-                    }).
+                    sorted((p, p1) -> p.getPrice().compareTo(p1.getPrice())).
                     collect(Collectors.toList());
         }
 
@@ -358,9 +291,43 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
     }
 
     @Override
-    public List<Product> findByPriceInBetween(int price1, int price2) {
+    public List<Product> findByPriceInBetween(BigDecimal price1, BigDecimal price2) {
         return requestSql().stream().
-                filter(p -> p.getPrice() >= price1 && p.getPrice() <= price2).
+                filter(p -> p.getPrice().intValue() >= price1.intValue() && p.getPrice().intValue() <= price2.intValue()).
                 collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Product> findProducts(String category, String name, String brand, String sortedName, String sortedPrice) {
+
+        if (category != null && name != null && brand != null) {
+            return findByCategoryAndNameAndBrand(category, name, brand, sortedName, sortedPrice);
+        }
+
+        if (category != null && brand != null) {
+            return findByCategoryAndBrand(category, brand, sortedName, sortedPrice);
+        }
+
+        if (category != null && name != null) {
+            return findByCategoryAndName(category, name, sortedName, sortedPrice);
+        }
+
+        if (brand != null && name != null) {
+            return findByBrandAndName (brand, name, sortedName, sortedPrice);
+        }
+
+        if (brand != null) {
+            return findByBrand(brand, sortedName, sortedPrice);
+        }
+
+        if (name != null) {
+            return findByName(name, sortedName, sortedPrice);
+        }
+
+        if (category != null) {
+            return findByCategory(category, sortedName, sortedPrice);
+        }
+
+        return requestSql();
     }
 }

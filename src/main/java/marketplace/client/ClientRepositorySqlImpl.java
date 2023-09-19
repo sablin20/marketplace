@@ -2,7 +2,7 @@ package marketplace.client;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import marketplace.customexception.CustomException;
+import marketplace.customexception.NoSuchProduct;
 import marketplace.product.ProductRepository;
 import marketplace.store.Store;
 import marketplace.store.StoreRepository;
@@ -20,9 +20,10 @@ public class ClientRepositorySqlImpl implements ClientRepository {
     private StoreRepository storeRepository;
 
     @Override
-    public void create(Client client) {
+    public Client create(Client client) {
         jdbcTemplate.update("INSERT INTO Client VALUES (?,?,?)",
                 client.getId(), client.getName(), client.getLast_name());
+        return client;
     }
 
     @Override
@@ -43,7 +44,7 @@ public class ClientRepositorySqlImpl implements ClientRepository {
         store.stream().
                 filter(s -> s.getProducts().contains(product)).
                 findAny().
-                orElseThrow(() -> new CustomException("No Store for this Product"));
+                orElseThrow(() -> new NoSuchProduct("No Store for this Product"));
         jdbcTemplate.update("UPDATE Client SET history = ? WHERE id = ?", product.getId(), client.getId());
     }
 
@@ -60,7 +61,7 @@ public class ClientRepositorySqlImpl implements ClientRepository {
         client.getFavorites().stream().
                 filter(p -> p.getId().equals(productId)).
                 findFirst().
-                orElseThrow(() -> new CustomException(String.format("There is no such product id = %s in the favorites list", productId)));
+                orElseThrow(() -> new NoSuchProduct(String.format("There is no such product id = %s in the favorites list", productId)));
         jdbcTemplate.update("DELETE favorites FROM Client WHERE favorites = ?", productId);
     }
 }
