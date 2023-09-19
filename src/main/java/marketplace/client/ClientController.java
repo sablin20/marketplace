@@ -1,18 +1,16 @@
 package marketplace.client;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/client")
 public class ClientController {
 
-    private final ClientRepository clientRepository;
+    private ClientRepository clientRepository;
 
     @PostMapping("/create")
-    public void create(@RequestBody Client client) {
-        clientRepository.create(client);
+    public Client create(@RequestBody Client client) {
+        return clientRepository.create(client);
     }
 
     @DeleteMapping("/delete")

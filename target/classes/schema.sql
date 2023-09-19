@@ -1,10 +1,11 @@
 CREATE TABLE Product (
  id VARCHAR(1000) PRIMARY KEY NOT NULL,
  name VARCHAR(100) NOT NULL,
- price INT NOT NULL,
+ price BIGINT NOT NULL,
  category VARCHAR(20) NOT NULL,
  brand VARCHAR(30) NOT NULL,
- amount INT
+ amount INT,
+ stores VARCHAR(100)
 );
 
 CREATE TABLE Store (
@@ -23,3 +24,5 @@ CREATE TABLE Client (
     FOREIGN KEY (favorites) REFERENCES Product(id),
     FOREIGN KEY (history) REFERENCES Product(id)
 );
+
+ALTER TABLE Product ADD FOREIGN KEY (stores) REFERENCES Store(id)

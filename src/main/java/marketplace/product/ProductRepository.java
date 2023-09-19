@@ -2,13 +2,14 @@ package marketplace.product;
 
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
 public interface ProductRepository {
 
-    void create(Product product);
-    String removeById(String id);
+    Product create(Product product);
+    void removeById(String id);
     Product findById(String id);
     List<Product> findByCategory(String category, String sorted, String price);
     List<Product> findByCategoryAndBrand(String category, String brand, String sorted, String price);
@@ -17,5 +18,6 @@ public interface ProductRepository {
     List<Product> findByBrand(String brand, String sorted, String price);
     List<Product> findByBrandAndName(String brand, String name, String sorted, String price);
     List<Product> findByName(String name, String sorted, String price);
-    List<Product> findByPriceInBetween(int price1, int price2);
+    List<Product> findByPriceInBetween(BigDecimal price1, BigDecimal price2);
+    List<Product> findProducts(String category, String name, String brand, String sortedName, String sortedPrice);
 }
