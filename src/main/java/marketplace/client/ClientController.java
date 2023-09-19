@@ -1,44 +1,46 @@
 package marketplace.client;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/client")
 public class ClientController {
 
-    private ClientRepositorySqlImpl repositorySql;
+    private final ClientRepository clientRepository;
 
     @PostMapping("/create")
-    public String create(@RequestBody Client client) {
-        return repositorySql.create(client);
+    public void create(@RequestBody Client client) {
+        clientRepository.create(client);
     }
 
     @DeleteMapping("/delete")
-    public String remove(@RequestParam("id") String id) {
-        return repositorySql.removeById(id);
+    public void remove(@RequestParam("id") String id) {
+        clientRepository.removeById(id);
     }
 
     @GetMapping("/find")
     public Client findById(@RequestParam("id") String id) {
-        return repositorySql.findById(id);
+        return clientRepository.findById(id);
     }
 
     @PostMapping("/buy")
-    public String buyProduct(@RequestParam("clientId") String clientId,
+    public void buyProduct(@RequestParam("clientId") String clientId,
                              @RequestParam("productId") String productId) {
-        return repositorySql.buyProduct(clientId, productId);
+        clientRepository.buyProduct(clientId, productId);
     }
 
     @PostMapping("/addFavorites")
-    public String addToFavorites(@RequestParam("clientId") String clientId,
+    public void addToFavorites(@RequestParam("clientId") String clientId,
                                  @RequestParam("productId") String productId) {
-        return repositorySql.addToFavorites(clientId, productId);
+        clientRepository.addToFavorites(clientId, productId);
     }
 
     @DeleteMapping("/removeFavorites")
-    public String removeFromFavorites(@RequestParam("clientId") String clientId,
+    public void removeFromFavorites(@RequestParam("clientId") String clientId,
                                       @RequestParam("productId") String productId) {
-        return repositorySql.removeFromFavorites(clientId, productId);
+        clientRepository.removeFromFavorites(clientId, productId);
     }
 
 }
