@@ -1,29 +1,21 @@
 package marketplace.client;
 
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import marketplace.customexception.NoSuchProduct;
-import marketplace.product.ProductRepository;
-import marketplace.store.Store;
-import marketplace.store.StoreRepository;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import java.math.BigDecimal;
 
-@Data
 @Repository
 @RequiredArgsConstructor
 public class ClientRepositorySqlImpl implements ClientRepository {
 
     private final JdbcTemplate jdbcTemplate;
-    private ProductRepository productRepository;
-    private StoreRepository storeRepository;
 
     @Override
     public Client create(Client client) {
-        jdbcTemplate.update("INSERT INTO Client VALUES (?,?,?)",
-                client.getId(), client.getName(), client.getLast_name());
-        return client;
+        jdbcTemplate.update("INSERT INTO Client VALUES (?,?)", client.getName(), client.getLast_name());
+        return jdbcTemplate.queryForObject("SELECT * FROM Client WHERE id = ? AND name = ? AND last_name = ?",
+                Client.class, client.getId(), client.getName(), client.getLast_name());
     }
 
     @Override
@@ -33,35 +25,34 @@ public class ClientRepositorySqlImpl implements ClientRepository {
 
     @Override
     public void removeById(String id) {
-        jdbcTemplate.update("DELETE FROM Client WHERE id = ?",  id);
+        jdbcTemplate.update("DELETE FROM Client WHERE id = ?", id);
     }
 
     @Override
     public void buyProduct(String clientId, String productId) {
-        var client = findById(clientId);
-        var product = productRepository.findById(productId);
-        var store = jdbcTemplate.query("SELECT * FROM Store", new BeanPropertyRowMapper<>(Store.class));
-        store.stream().
-                filter(s -> s.getProducts().contains(product)).
-                findAny().
-                orElseThrow(() -> new NoSuchProduct("No Store for this Product"));
-        jdbcTemplate.update("UPDATE Client SET history = ? WHERE id = ?", product.getId(), client.getId());
+        var amountProduct = jdbcTemplate.queryForObject("SELECT amount FROM Product WHERE id = ?", BigDecimal.class, productId);
+
+        assert amountProduct != null;
+        if (amountProduct.intValue() == 0) {
+            System.out.println("Not available");
+        } else if (amountProduct.intValue() >= 1 && amountProduct.intValue() < 4) {
+            System.out.println("There are few of this product left");
+        } else if (amountProduct.intValue() > 3 && amountProduct.intValue() < 8) {
+            System.out.println("This product is enough");
+        } else if (amountProduct.intValue() > 7) {
+            System.out.println("There is a lot of this product in stock");
+        }
+
+        jdbcTemplate.update("UPDATE Client SET history = ? WHERE id = ?", productId, clientId);
     }
 
     @Override
     public void addToFavorites(String clientId, String productId) {
-        var client = findById(clientId);
-        var product = productRepository.findById(productId);
-        jdbcTemplate.update("UPDATE Client SET favorites = ? WHERE id = ?", product.getId(), client.getId());
+        jdbcTemplate.update("UPDATE Client SET favorites = ? WHERE id = ?", productId, clientId);
     }
 
     @Override
     public void removeFromFavorites(String clientId, String productId) {
-        var client = findById(clientId);
-        client.getFavorites().stream().
-                filter(p -> p.getId().equals(productId)).
-                findFirst().
-                orElseThrow(() -> new NoSuchProduct(String.format("There is no such product id = %s in the favorites list", productId)));
-        jdbcTemplate.update("DELETE favorites FROM Client WHERE favorites = ?", productId);
+        jdbcTemplate.update("DELETE favorites FROM Client WHERE favorites = ? AND id = ?", productId, clientId);
     }
 }

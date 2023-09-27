@@ -1,12 +1,14 @@
 package marketplace.client;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/client")
 public class ClientController {
 
-    private ClientRepository clientRepository;
+    private final ClientRepository clientRepository;
 
     @PostMapping("/create")
     public Client create(@RequestBody Client client) {
@@ -40,5 +42,4 @@ public class ClientController {
                                       @RequestParam("productId") String productId) {
         clientRepository.removeFromFavorites(clientId, productId);
     }
-
 }

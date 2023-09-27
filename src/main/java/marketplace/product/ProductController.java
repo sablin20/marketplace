@@ -1,14 +1,16 @@
 package marketplace.product;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/product")
 public class ProductController {
 
-    private ProductRepository repository;
+    private final ProductRepository repository;
 
     @PostMapping("/create")
     public void create(@RequestBody Product product) {
@@ -30,13 +32,9 @@ public class ProductController {
                                       @RequestParam(required = false, value = "name") String name,
                                       @RequestParam(required = false, value = "brand") String brand,
                                       @RequestParam(required = false, value = "sortedName") String sortedName,
-                                      @RequestParam(required = false, value = "sortedPrice") String sortedPrice) {
-        return repository.findProducts(category, name, brand, sortedName, sortedPrice);
-    }
-
-    @GetMapping("/priceBetween")
-    public List<Product> findByPriceInBetween(@RequestParam("firstPrice") BigDecimal firstPrice,
-                                              @RequestParam("lastPrice") BigDecimal lastPrice) {
-        return repository.findByPriceInBetween(firstPrice, lastPrice);
+                                      @RequestParam(required = false, value = "sortedPrice") String sortedPrice,
+                                      @RequestParam(required = false, value = "priceFirst") BigDecimal priceFirst,
+                                      @RequestParam(required = false, value = "priceLast") BigDecimal priceLast) {
+        return repository.findProducts(category, name, brand, sortedName, sortedPrice, priceFirst, priceLast);
     }
 }
