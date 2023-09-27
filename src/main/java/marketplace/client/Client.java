@@ -1,8 +1,6 @@
 package marketplace.client;
 
 import lombok.Data;
-import marketplace.product.Product;
-import java.util.List;
 
 @Data
 public class Client {
@@ -13,7 +11,4 @@ public class Client {
 
     private String last_name;
 
-    List<Product> favorites;
-
-    List<Product> history;
 }
