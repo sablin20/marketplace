@@ -1,8 +1,7 @@
 package marketplace.product;
 
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import marketplace.customexception.NoSuchProduct;
+import marketplace.customexception.ProductNotFoundException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -10,7 +9,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Data
 @Repository
 @RequiredArgsConstructor
 public class ProductRepositoryStreamImpl implements ProductRepository{
@@ -26,8 +24,8 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
 
     @Override
     public Product create(Product product) {
-        jdbcTemplate.update("INSERT INTO Product VALUES (?,?,?,?,?,?)",
-                product.getId(), product.getName(), product.getPrice(), product.getCategory(), product.getBrand(), product.getAmount());
+        jdbcTemplate.update("INSERT INTO Product VALUES (?,?,?,?,?)",
+                product.getName(), product.getPrice(), product.getCategory(), product.getBrand(), product.getAmount());
         return product;
     }
 
@@ -36,7 +34,7 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
         var product = requestSql().stream().
                 filter(p -> p.getId().equals(id)).
                 findFirst().
-                orElseThrow(() -> new NoSuchProduct(String.format("No Product by id = %s", id)));
+                orElseThrow(() -> new ProductNotFoundException(String.format("No Product by id = %s", id)));
         jdbcTemplate.update("DELETE FROM Product WHERE id = ?", product.getId());
     }
 
@@ -45,12 +43,11 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
         return requestSql().stream().
                 filter(p -> p.getId().equals(id)).
                 findFirst().
-                orElseThrow(() -> new NoSuchProduct(String.format("No Product by id = %s", id)));
+                orElseThrow(() -> new ProductNotFoundException(String.format("No Product by id = %s", id)));
     }
 
-    @Override
-    public List<Product> findByCategory(String category, String sorted, String price) {
 
+    public List<Product> findByCategory(String category, String sorted, String price) {
         if (sorted.equals("DESC")) {
             return requestSql().stream().
                     filter(p -> p.getCategory().matches(category)).
@@ -84,7 +81,7 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
                 collect(Collectors.toList());
     }
 
-    @Override
+
     public List<Product> findByCategoryAndBrand(String category, String brand, String sorted, String price) {
         if (sorted.equals("DESC")) {
             return requestSql().stream().
@@ -119,7 +116,7 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
                 collect(Collectors.toList());
     }
 
-    @Override
+
     public List<Product> findByCategoryAndName(String category, String name, String sorted, String price) {
         if (sorted.equals("DESC")) {
             return requestSql().stream().
@@ -154,7 +151,7 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
                 collect(Collectors.toList());
     }
 
-    @Override
+
     public List<Product> findByCategoryAndNameAndBrand(String category, String name, String brand, String sorted, String price) {
         if (sorted.equals("DESC")) {
             return requestSql().stream().
@@ -189,7 +186,6 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
                 collect(Collectors.toList());
     }
 
-    @Override
     public List<Product> findByBrand(String brand, String sorted, String price) {
         if (sorted.equals("DESC")) {
             return requestSql().stream().
@@ -222,7 +218,7 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
         return requestSql().stream().filter(p -> p.getBrand().matches(brand)).collect(Collectors.toList());
     }
 
-    @Override
+
     public List<Product> findByName(String name, String sorted, String price) {
         if (sorted.equals("DESC")) {
             return requestSql().stream().
@@ -255,7 +251,7 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
         return requestSql().stream().filter(p -> p.getName().matches(name)).collect(Collectors.toList());
     }
 
-    @Override
+
     public List<Product> findByBrandAndName(String brand, String name, String sorted, String price) {
         if (sorted.equals("DESC")) {
             return requestSql().stream().
@@ -291,14 +287,7 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
     }
 
     @Override
-    public List<Product> findByPriceInBetween(BigDecimal price1, BigDecimal price2) {
-        return requestSql().stream().
-                filter(p -> p.getPrice().intValue() >= price1.intValue() && p.getPrice().intValue() <= price2.intValue()).
-                collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Product> findProducts(String category, String name, String brand, String sortedName, String sortedPrice) {
+    public List<Product> findProducts(String category, String name, String brand, String sortedName, String sortedPrice, BigDecimal priceFirst, BigDecimal priceLast) {
 
         if (category != null && name != null && brand != null) {
             return findByCategoryAndNameAndBrand(category, name, brand, sortedName, sortedPrice);

@@ -1,28 +1,22 @@
 CREATE TABLE Product (
- id VARCHAR(1000) PRIMARY KEY NOT NULL,
+ id SERIAL PRIMARY KEY NOT NULL,
  name VARCHAR(100) NOT NULL,
  price BIGINT NOT NULL,
  category VARCHAR(20) NOT NULL,
  brand VARCHAR(30) NOT NULL,
- amount INT,
- stores VARCHAR(100)
+ amount INT
 );
 
 CREATE TABLE Store (
-   id VARCHAR(1000) PRIMARY KEY NOT NULL,
+   id SERIAL PRIMARY KEY NOT NULL,
    name VARCHAR(100) NOT NULL,
-   products VARCHAR(1000),
-   FOREIGN KEY (products) REFERENCES Product(id)
+   products VARCHAR(1000)
 );
 
 CREATE TABLE Client (
-    id VARCHAR(1000) PRIMARY KEY NOT NULL,
+    id SERIAL PRIMARY KEY NOT NULL,
     name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     favorites VARCHAR(1000),
-    history VARCHAR(1000),
-    FOREIGN KEY (favorites) REFERENCES Product(id),
-    FOREIGN KEY (history) REFERENCES Product(id)
+    history VARCHAR(1000)
 );
-
-ALTER TABLE Product ADD FOREIGN KEY (stores) REFERENCES Store(id)

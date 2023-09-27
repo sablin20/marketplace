@@ -1,13 +1,15 @@
 package marketplace.store;
 
+import lombok.RequiredArgsConstructor;
 import marketplace.product.Product;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/store")
 public class StoreController {
 
-    private StoreRepository storeRepository;
+    private final StoreRepository storeRepository;
 
     @GetMapping("/find")
     public Store findById(@RequestParam("id") String id) {
