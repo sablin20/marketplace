@@ -1,7 +1,6 @@
 package marketplace.product;
 
 import lombok.RequiredArgsConstructor;
-import marketplace.customexception.ProductNotFoundException;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,12 +19,6 @@ import java.util.List;
 public class ProductRepositorySqlImpl implements ProductRepository {
 
     private final JdbcTemplate jdbcTemplate;
-
-    private void validValue(List<Product> product) {
-        if (product.size() == 0) {
-            throw new ProductNotFoundException("No Products by this parameters");
-        }
-    }
 
     @Override
     public Product create(Product product) {

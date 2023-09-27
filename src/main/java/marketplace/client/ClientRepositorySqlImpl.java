@@ -1,6 +1,7 @@
 package marketplace.client;
 
 import lombok.RequiredArgsConstructor;
+import marketplace.store.ProductInStock;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
@@ -30,7 +31,8 @@ public class ClientRepositorySqlImpl implements ClientRepository {
 
     @Override
     public void buyProduct(String clientId, String productId) {
-        var amountProduct = jdbcTemplate.queryForObject("SELECT amount FROM Product WHERE id = ?", BigDecimal.class, productId);
+        var amountProduct = jdbcTemplate.queryForObject(
+                "SELECT amount FROM Product WHERE id = ?", BigDecimal.class, productId);
 
         assert amountProduct != null;
         if (amountProduct.intValue() == 0) {
@@ -43,16 +45,20 @@ public class ClientRepositorySqlImpl implements ClientRepository {
             System.out.println("There is a lot of this product in stock");
         }
 
-        jdbcTemplate.update("UPDATE Client SET history = ? WHERE id = ?", productId, clientId);
+        var product = jdbcTemplate.queryForObject("SELECT * FROM ProductInStock WHERE productId = ?",
+                                                                                    ProductInStock.class, productId);
+        assert product != null;
+        jdbcTemplate.update("INSERT INTO PurchaseHistory VALUES (?,?,?)", clientId, product.getStoreId(), productId);
+
     }
 
     @Override
     public void addToFavorites(String clientId, String productId) {
-        jdbcTemplate.update("UPDATE Client SET favorites = ? WHERE id = ?", productId, clientId);
+        jdbcTemplate.update("INSERT INTO Favorites VALUES (?,?)", clientId, productId);
     }
 
     @Override
     public void removeFromFavorites(String clientId, String productId) {
-        jdbcTemplate.update("DELETE favorites FROM Client WHERE favorites = ? AND id = ?", productId, clientId);
+        jdbcTemplate.update("DELETE FROM Favorites WHERE clientId = ? AND productId = ?", clientId, productId);
     }
 }

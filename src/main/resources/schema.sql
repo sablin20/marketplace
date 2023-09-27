@@ -2,21 +2,37 @@ CREATE TABLE Product (
  id SERIAL PRIMARY KEY NOT NULL,
  name VARCHAR(100) NOT NULL,
  price BIGINT NOT NULL,
- category VARCHAR(20) NOT NULL,
- brand VARCHAR(30) NOT NULL,
+ category VARCHAR(50) NOT NULL,
+ brand VARCHAR(50) NOT NULL,
  amount INT
 );
 
 CREATE TABLE Store (
    id SERIAL PRIMARY KEY NOT NULL,
-   name VARCHAR(100) NOT NULL,
-   products VARCHAR(1000)
+   name VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE Client (
     id SERIAL PRIMARY KEY NOT NULL,
     name VARCHAR(100) NOT NULL,
-    last_name VARCHAR(100) NOT NULL,
-    favorites VARCHAR(1000),
-    history VARCHAR(1000)
+    last_name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Favorites (
+    id SERIAL PRIMARY KEY NOT NULL,
+    clientId VARCHAR(1000) NOT NULL,
+    productId VARCHAR(1000) NOT NULL
+);
+
+CREATE TABLE PurchaseHistory (
+    id SERIAL PRIMARY KEY NOT NULL,
+    clientId VARCHAR(1000) NOT NULL,
+    storeId VARCHAR(1000) NOT NULL,
+    productId VARCHAR(1000) NOT NULL
+);
+
+CREATE TABLE ProductInStock (
+    id SERIAL PRIMARY KEY NOT NULL,
+    storeId VARCHAR(1000) NOT NULL,
+    productId VARCHAR(1000) NOT NULL
 );
