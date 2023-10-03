@@ -20,19 +20,19 @@ CREATE TABLE Client (
 
 CREATE TABLE Favorites (
     id SERIAL PRIMARY KEY NOT NULL,
-    clientId VARCHAR(1000) NOT NULL,
-    productId VARCHAR(1000) NOT NULL
+    clientId INTEGER NOT NULL,
+    productId INTEGER NOT NULL
 );
 
 CREATE TABLE PurchaseHistory (
     id SERIAL PRIMARY KEY NOT NULL,
-    clientId VARCHAR(1000) NOT NULL,
-    storeId VARCHAR(1000) NOT NULL,
-    productId VARCHAR(1000) NOT NULL
+    clientId INTEGER NOT NULL,
+    storeId INTEGER NOT NULL,
+    productId INTEGER NOT NULL
 );
 
 CREATE TABLE ProductInStock (
     id SERIAL PRIMARY KEY NOT NULL,
-    storeId VARCHAR(1000) NOT NULL,
-    productId VARCHAR(1000) NOT NULL
+    storeId INTEGER NOT NULL,
+    productId INTEGER NOT NULL
 );

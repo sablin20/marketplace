@@ -5,8 +5,8 @@ import lombok.Data;
 @Data
 public class ProductInStock {
 
-    private String id;
-    private String storeId;
-    private String productId;
+    private Integer id;
+    private Integer storeId;
+    private Integer productId;
 
 }

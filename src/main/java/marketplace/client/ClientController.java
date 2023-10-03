@@ -26,20 +26,22 @@ public class ClientController {
     }
 
     @PostMapping("/buy")
-    public void buyProduct(@RequestParam("clientId") String clientId,
-                             @RequestParam("productId") String productId) {
-        clientRepository.buyProduct(clientId, productId);
+    public void buyProduct(@RequestParam("id") Integer id,
+                           @RequestParam("clientId") Integer clientId,
+                           @RequestParam("productId") Integer productId) {
+        clientRepository.buyProduct(id, clientId, productId);
     }
 
     @PostMapping("/addFavorites")
-    public void addToFavorites(@RequestParam("clientId") String clientId,
-                                 @RequestParam("productId") String productId) {
-        clientRepository.addToFavorites(clientId, productId);
+    public void addToFavorites(@RequestParam("id") Integer id,
+                               @RequestParam("clientId") Integer clientId,
+                               @RequestParam("productId") Integer productId) {
+        clientRepository.addToFavorites(id, clientId, productId);
     }
 
     @DeleteMapping("/removeFavorites")
-    public void removeFromFavorites(@RequestParam("clientId") String clientId,
-                                      @RequestParam("productId") String productId) {
+    public void removeFromFavorites(@RequestParam("clientId") Integer clientId,
+                                      @RequestParam("productId") Integer productId) {
         clientRepository.removeFromFavorites(clientId, productId);
     }
 }

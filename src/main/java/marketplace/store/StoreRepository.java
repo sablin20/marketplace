@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 public interface StoreRepository {
     Store create(Store store);
     Store findById(Integer id);
-    void addProductForSale(String storeId, String productId);
-    void deleteProductSales(String storeId, String productId);
-    void updateProducts(String storeId, Product product);
+    void addProductForSale(Integer id, Integer storeId, Integer productId);
+    void deleteProductSales(Integer storeId, Integer productId);
+    void updateProducts(Integer id, Integer storeId, Product product);
 }
