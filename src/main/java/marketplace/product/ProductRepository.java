@@ -8,7 +8,7 @@ import java.util.List;
 public interface ProductRepository {
 
     Product create(Product product);
-    void removeById(String id);
-    Product findById(String id);
+    void removeById(Integer id);
+    Product findById(Integer id);
     List<Product> findProducts(String category, String name, String brand, String sortedName, String sortedPrice, BigDecimal price1, BigDecimal price2);
 }

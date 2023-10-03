@@ -18,12 +18,12 @@ public class ProductController {
     }
 
     @DeleteMapping("/remove")
-    public void removeById(@RequestParam("id") String id) {
+    public void removeById(@RequestParam("id") Integer id) {
         repository.removeById(id);
     }
 
     @GetMapping("/findById")
-    public Product findById(@RequestParam("id") String id) {
+    public Product findById(@RequestParam("id") Integer id) {
         return repository.findById(id);
     }
 

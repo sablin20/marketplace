@@ -19,7 +19,7 @@ public class StoreRepositorySqlImpl implements StoreRepository {
     }
 
     @Override
-    public Store findById(String id) {
+    public Store findById(Integer id) {
         return jdbcTemplate.queryForObject("SELECT * FROM Store WHERE id = ?", Store.class, id);
     }
 

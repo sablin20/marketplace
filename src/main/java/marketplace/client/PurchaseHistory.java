@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class PurchaseHistory {
 
-    private String id;
+    private Integer id;
     private String clientId;
     private String storeId;
     private String productId;

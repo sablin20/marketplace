@@ -4,8 +4,8 @@ import marketplace.client.Client;
 import marketplace.product.Product;
 import marketplace.store.Store;
 import org.springframework.stereotype.Repository;
-
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -13,14 +13,14 @@ public interface Analytics {
 
     //нужно получить всех продавцов(имя) и
     // количество категорий товаров которыми они барыжат
-    // при учете что категории PC и TV не должны учитываться в подсчете;
+    // при учете, что категории PC и TV не должны учитываться в подсчете;
     Map<String, Integer> findStoreNameAndAmountProductForSales();
 
     //нужно получить пользователя(имя) и сколько он потратил на покупки какого-то бранда(бранд ты сам указываешь)
-    Map<String, BigDecimal> findClientNameAndSumCashByBrand(String brand);
+    List<Client> findClientNameAndSumCashByBrand(String brand); /** ok **/
 
     //нужно получить продавца(имя) который продал больше всего какого-то бранда
-    String findNameStoreByBrand(String brand);
+    List<String> findNameStoreByMaxSalesByBrand(String brand);
 
     //нужно получить всех, покупателя(имя) и продавца(имя) у которого этот покупатель больше всего купил раз
     Map<String, String> findNameClientAndNameStoreByMax(String clientId);
