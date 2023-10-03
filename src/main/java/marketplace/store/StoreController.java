@@ -12,7 +12,7 @@ public class StoreController {
     private final StoreRepository storeRepository;
 
     @GetMapping("/find")
-    public Store findById(@RequestParam("id") String id) {
+    public Store findById(@RequestParam("id") Integer id) {
         return storeRepository.findById(id);
     }
 

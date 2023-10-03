@@ -2,6 +2,7 @@ package marketplace.client;
 
 import lombok.RequiredArgsConstructor;
 import marketplace.store.ProductInStock;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
@@ -14,18 +15,21 @@ public class ClientRepositorySqlImpl implements ClientRepository {
 
     @Override
     public Client create(Client client) {
-        jdbcTemplate.update("INSERT INTO Client VALUES (?,?)", client.getName(), client.getLast_name());
-        return jdbcTemplate.queryForObject("SELECT * FROM Client WHERE id = ? AND name = ? AND last_name = ?",
-                Client.class, client.getId(), client.getName(), client.getLast_name());
+        jdbcTemplate.update("INSERT INTO Client VALUES (?,?,?);",
+                client.getId(),
+                client.getName(),
+                client.getLast_name());
+        return jdbcTemplate.queryForObject("SELECT * FROM Client WHERE id = ?;",
+               new BeanPropertyRowMapper<>(Client.class), client.getId());
     }
 
     @Override
-    public Client findById(String id) {
-        return jdbcTemplate.queryForObject("SELECT * FROM Client WHERE id = ?", Client.class, id);
+    public Client findById(Integer id) {
+        return jdbcTemplate.queryForObject("SELECT * FROM Client WHERE id = ?", new BeanPropertyRowMapper<>(Client.class), id);
     }
 
     @Override
-    public void removeById(String id) {
+    public void removeById(Integer id) {
         jdbcTemplate.update("DELETE FROM Client WHERE id = ?", id);
     }
 
@@ -46,19 +50,25 @@ public class ClientRepositorySqlImpl implements ClientRepository {
         }
 
         var product = jdbcTemplate.queryForObject("SELECT * FROM ProductInStock WHERE productId = ?",
-                                                                                    ProductInStock.class, productId);
+                                                            new BeanPropertyRowMapper<>(ProductInStock.class), productId);
         assert product != null;
-        jdbcTemplate.update("INSERT INTO PurchaseHistory VALUES (?,?,?)", clientId, product.getStoreId(), productId);
-
+        jdbcTemplate.update("INSERT INTO PurchaseHistory VALUES (?,?,?)",
+                clientId,
+                product.getStoreId(),
+                productId);
     }
 
     @Override
     public void addToFavorites(String clientId, String productId) {
-        jdbcTemplate.update("INSERT INTO Favorites VALUES (?,?)", clientId, productId);
+        jdbcTemplate.update("INSERT INTO Favorites VALUES (?,?)",
+                clientId,
+                productId);
     }
 
     @Override
     public void removeFromFavorites(String clientId, String productId) {
-        jdbcTemplate.update("DELETE FROM Favorites WHERE clientId = ? AND productId = ?", clientId, productId);
+        jdbcTemplate.update("DELETE FROM Favorites WHERE clientId = ? AND productId = ?",
+                clientId,
+                productId);
     }
 }

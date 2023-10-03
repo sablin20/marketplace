@@ -28,12 +28,12 @@ public class ProductRepositorySqlImpl implements ProductRepository {
     }
 
     @Override
-    public Product findById(String id) {
+    public Product findById(Integer id) {
         return jdbcTemplate.queryForObject("SELECT * FROM Product WHERE id = ?", Product.class, id);
     }
 
     @Override
-    public void removeById(String id) {
+    public void removeById(Integer id) {
         jdbcTemplate.update("DELETE FROM Product WHERE id = ?", id);
     }
 

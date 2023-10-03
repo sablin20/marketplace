@@ -16,12 +16,12 @@ public class ClientController {
     }
 
     @DeleteMapping("/delete")
-    public void remove(@RequestParam("id") String id) {
+    public void remove(@RequestParam("id") Integer id) {
         clientRepository.removeById(id);
     }
 
     @GetMapping("/find")
-    public Client findById(@RequestParam("id") String id) {
+    public Client findById(@RequestParam("id") Integer id) {
         return clientRepository.findById(id);
     }
 

@@ -1,0 +1,12 @@
+### create Client
+POST http://localhost:8888/client/create
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "Sem",
+  "last_name": "Axe"
+}
+
+### find Client by id
+GET http://localhost:8888/client/find?id=1

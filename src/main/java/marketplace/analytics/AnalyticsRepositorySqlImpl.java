@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -22,16 +23,17 @@ public class AnalyticsRepositorySqlImpl implements Analytics {
     }
 
     @Override
-    public Map<String, BigDecimal> findClientNameAndSumCashByBrand(String brand) {
-        var name = jdbcTemplate.query("SELECT Client.name, SUM(Product.price) " +
-                "FROM Product, PurchaseHistory AS PH JOIN Client ON PH.clientId = Client.id AND PH.productId = Product.id " +
+    public List<Client> findClientNameAndSumCashByBrand(String brand) {
+        return jdbcTemplate.query("SELECT DISTINCT Client.name, SUM(Product.price) " +
+                "FROM PurchaseHistory AS PH JOIN Client ON PH.clientId = Client.id " +
+                "JOIN Product ON PH.productId = Product.id " +
                 "WHERE brand = ? " +
-                "GROUP BY Client.name", new BeanPropertyRowMapper<>(), brand);
-        return null;
+                "GROUP BY Client.name",
+                new BeanPropertyRowMapper<>(Client.class), brand);
     }
 
     @Override
-    public String findNameStoreByBrand(String brand) {
+    public List<String> findNameStoreByMaxSalesByBrand(String brand) {
         return null;
     }
 

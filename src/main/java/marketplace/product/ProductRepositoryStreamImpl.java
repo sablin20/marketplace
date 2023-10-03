@@ -30,7 +30,7 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
     }
 
     @Override
-    public void removeById(String id) {
+    public void removeById(Integer id) {
         var product = requestSql().stream().
                 filter(p -> p.getId().equals(id)).
                 findFirst().
@@ -39,7 +39,7 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
     }
 
     @Override
-    public Product findById(String id) {
+    public Product findById(Integer id) {
         return requestSql().stream().
                 filter(p -> p.getId().equals(id)).
                 findFirst().
