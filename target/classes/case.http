@@ -1,3 +1,6 @@
+
+************* CLIENT *************************************************************************************************************
+
 ### create Client
 POST http://localhost:8888/client/create
 Content-Type: application/json
@@ -8,5 +11,87 @@ Content-Type: application/json
   "last_name": "Axe"
 }
 
+### delete client by id
+DELETE http://localhost:8888/client/delete?id=1
+
 ### find Client by id
 GET http://localhost:8888/client/find?id=1
+
+### buy product
+POST http://localhost:8888/client/buy?id=2&clientId=1&productId=1
+
+### add favorites
+POST http://localhost:8888/client/addFavorites?id=4&clientId=1&productId=1
+
+### delete favorites
+DELETE http://localhost:8888/client/removeFavorites?clientId=1&productId=1
+
+********************* PRODUCT **************************************************************************************************
+
+### create product
+POST http://localhost:8888/product/create
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "Iphone14",
+  "price": 100000,
+  "category": "Smartphone",
+  "brand": "Apple",
+  "amount": 7
+}
+
+### create product
+POST http://localhost:8888/product/create
+Content-Type: application/json
+
+{
+  "id": 2,
+  "name": "Iphone8",
+  "price": 50000,
+  "category": "Smartphone",
+  "brand": "Apple",
+  "amount": 2
+}
+
+### delete product by id
+DELETE http://localhost:8888/product/remove?id=1
+
+### find product by id
+GET http://localhost:8888/product/findById?id=1
+
+### find products by params
+GET http://localhost:8888/product/findProducts?sortedPrice=DESC
+
+******************* STORE ***************************************************************************************************
+
+### find store by id
+GET http://localhost:8888/store/find?id=1
+
+### create store
+POST http://localhost:8888/store/create
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "DNS"
+}
+
+### add products in store
+POST http://localhost:8888/store/addProducts?id=1&storeId=1&productId=1
+
+### remove products in store
+DELETE http://localhost:8888/store/removeProduct?storeId=1&productId=1
+
+### update product in store
+PUT http://localhost:8888/store/updateProduct?storeId=1
+Content-Type: application/json
+
+{
+  "id": 3,
+  "name": "Iphone8",
+  "price": 777777,
+  "category": "Smartphone",
+  "brand": "Apple",
+  "amount": 3
+}

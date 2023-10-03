@@ -6,8 +6,8 @@ import lombok.Data;
 public class PurchaseHistory {
 
     private Integer id;
-    private String clientId;
-    private String storeId;
-    private String productId;
+    private Integer clientId;
+    private Integer storeId;
+    private Integer productId;
 
 }

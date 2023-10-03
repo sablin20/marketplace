@@ -34,7 +34,7 @@ public class ClientRepositorySqlImpl implements ClientRepository {
     }
 
     @Override
-    public void buyProduct(String clientId, String productId) {
+    public void buyProduct(Integer id,Integer clientId, Integer productId) {
         var amountProduct = jdbcTemplate.queryForObject(
                 "SELECT amount FROM Product WHERE id = ?", BigDecimal.class, productId);
 
@@ -52,21 +52,23 @@ public class ClientRepositorySqlImpl implements ClientRepository {
         var product = jdbcTemplate.queryForObject("SELECT * FROM ProductInStock WHERE productId = ?",
                                                             new BeanPropertyRowMapper<>(ProductInStock.class), productId);
         assert product != null;
-        jdbcTemplate.update("INSERT INTO PurchaseHistory VALUES (?,?,?)",
+        jdbcTemplate.update("INSERT INTO PurchaseHistory VALUES (?,?,?,?)",
+                id,
                 clientId,
                 product.getStoreId(),
                 productId);
     }
 
     @Override
-    public void addToFavorites(String clientId, String productId) {
-        jdbcTemplate.update("INSERT INTO Favorites VALUES (?,?)",
+    public void addToFavorites(Integer id, Integer clientId, Integer productId) {
+        jdbcTemplate.update("INSERT INTO Favorites VALUES (?,?,?)",
+                id,
                 clientId,
                 productId);
     }
 
     @Override
-    public void removeFromFavorites(String clientId, String productId) {
+    public void removeFromFavorites(Integer clientId, Integer productId) {
         jdbcTemplate.update("DELETE FROM Favorites WHERE clientId = ? AND productId = ?",
                 clientId,
                 productId);

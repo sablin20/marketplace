@@ -21,15 +21,20 @@ public class ProductRepositorySqlImpl implements ProductRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public Product create(Product product) {
-        jdbcTemplate.update("INSERT INTO Product VALUES (?,?,?,?,?)",
-                product.getName(), product.getPrice(), product.getCategory(), product.getBrand(), product.getAmount());
-        return product;
+    public void create(Product product) {
+        jdbcTemplate.update("INSERT INTO Product VALUES (?,?,?,?,?,?)",
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getCategory(),
+                product.getBrand(),
+                product.getAmount());
     }
 
     @Override
     public Product findById(Integer id) {
-        return jdbcTemplate.queryForObject("SELECT * FROM Product WHERE id = ?", Product.class, id);
+        return jdbcTemplate.queryForObject("SELECT * FROM Product WHERE id = ?",
+                new BeanPropertyRowMapper<>(Product.class), id);
     }
 
     @Override
@@ -83,11 +88,11 @@ public class ProductRepositorySqlImpl implements ProductRepository {
             condition += sortedByPriceBetween;
         }
 
-        if (sortedName.equals("ASC") || sortedName.equals("DESC")) {
+        if (sortedName != null && (sortedName.equals("ASC") || sortedName.equals("DESC"))) {
             sortedByNameOrPrice = String.format(" ORDER BY name %s", sortedName);
             condition += sortedByNameOrPrice;
         }
-        if (sortedPrice.equals("ASC") || sortedPrice.equals("DESC")) {
+        if (sortedPrice != null && (sortedPrice.equals("ASC") || sortedPrice.equals("DESC"))) {
             sortedByNameOrPrice = String.format(" ORDER BY price %s", sortedPrice);
             condition += sortedByNameOrPrice;
         }
