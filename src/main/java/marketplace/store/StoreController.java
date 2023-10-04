@@ -11,8 +11,8 @@ public class StoreController {
 
     private final StoreRepository storeRepository;
 
-    @GetMapping("/find")
-    public Store findById(@RequestParam("id") Integer id) {
+    @GetMapping("/")
+    public Store getById(@RequestParam("id") Integer id) {
         return storeRepository.findById(id);
     }
 
@@ -21,23 +21,15 @@ public class StoreController {
         return storeRepository.create(store);
     }
 
-    @PostMapping("/addProducts")
-    public void addProductForSale(@RequestParam("id") Integer id,
-                                  @RequestParam("storeId") Integer storeId,
-                                  @RequestParam("productId") Integer productId) {
-        storeRepository.addProductForSale(id, storeId, productId);
-    }
+//    @DeleteMapping("/removeProduct")
+//    public void deleteProductSales(@RequestParam("storeId") Integer storeId,
+//                                     @RequestParam("productId") Integer productId) {
+//        storeRepository.deleteProductSales(storeId, productId);
+//    }
 
-    @DeleteMapping("/removeProduct")
-    public void deleteProductSales(@RequestParam("storeId") Integer storeId,
-                                     @RequestParam("productId") Integer productId) {
-        storeRepository.deleteProductSales(storeId, productId);
-    }
-
-    @PutMapping("/updateProduct")
-    public void updateProducts(@RequestParam("id") Integer id,
-                               @RequestParam("storeId") Integer storeId,
+    @PutMapping("/")
+    public void updateProducts(@RequestParam("storeId") Integer storeId,
                                @RequestBody Product product) {
-        storeRepository.updateProducts(id, storeId, product);
+        storeRepository.updateProducts(storeId, product);
     }
 }

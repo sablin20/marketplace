@@ -1,11 +1,11 @@
 package marketplace.client;
 
 import lombok.RequiredArgsConstructor;
-import marketplace.store.ProductInStock;
+import marketplace.customexception.ProductNotFoundException;
+import marketplace.product.Product;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import java.math.BigDecimal;
 
 @Repository
 @RequiredArgsConstructor
@@ -18,7 +18,7 @@ public class ClientRepositorySqlImpl implements ClientRepository {
         jdbcTemplate.update("INSERT INTO Client VALUES (?,?,?);",
                 client.getId(),
                 client.getName(),
-                client.getLast_name());
+                client.getLastName());
         return jdbcTemplate.queryForObject("SELECT * FROM Client WHERE id = ?;",
                new BeanPropertyRowMapper<>(Client.class), client.getId());
     }
@@ -34,43 +34,38 @@ public class ClientRepositorySqlImpl implements ClientRepository {
     }
 
     @Override
-    public void buyProduct(Integer id,Integer clientId, Integer productId) {
-        var amountProduct = jdbcTemplate.queryForObject(
-                "SELECT amount FROM Product WHERE id = ?", BigDecimal.class, productId);
+    public void buyProduct(Integer id, Integer clientId, Integer productId, Integer amount) {
 
-        assert amountProduct != null;
-        if (amountProduct.intValue() == 0) {
-            System.out.println("Not available");
-        } else if (amountProduct.intValue() >= 1 && amountProduct.intValue() < 4) {
-            System.out.println("There are few of this product left");
-        } else if (amountProduct.intValue() > 3 && amountProduct.intValue() < 8) {
-            System.out.println("This product is enough");
-        } else if (amountProduct.intValue() > 7) {
-            System.out.println("There is a lot of this product in stock");
+        var amountProduct = jdbcTemplate.queryForObject(
+                "SELECT amount FROM Product_amount WHERE product_id = ?",
+                Integer.class, productId);
+
+        if (amountProduct != null && amountProduct >= 0) {
+            switch (amountProduct) {
+                case 0 -> System.out.println("Not available");
+                case 1, 2, 3 -> System.out.println("There are few of this product left");
+                case 4, 5, 6, 7 -> System.out.println("This product is enough");
+                default -> System.out.println("There is a lot of this product in stock");
+            }
+        } else {
+            throw new ProductNotFoundException("Product not found");
         }
 
-        var product = jdbcTemplate.queryForObject("SELECT * FROM ProductInStock WHERE productId = ?",
-                                                            new BeanPropertyRowMapper<>(ProductInStock.class), productId);
-        assert product != null;
-        jdbcTemplate.update("INSERT INTO PurchaseHistory VALUES (?,?,?,?)",
-                id,
-                clientId,
-                product.getStoreId(),
-                productId);
-    }
+        var product = jdbcTemplate.queryForObject("SELECT * FROM Product WHERE product_id = ?",
+                                                            new BeanPropertyRowMapper<>(Product.class), productId);
+        // проверяем что продукт есть и его количество больше либо равно запрошенному на покупку количеству
+        if (product != null && amountProduct >= amount) {
+            jdbcTemplate.update("INSERT INTO PurchaseHistory VALUES (?,?,?,?,?)",
+                    id,
+                    clientId,
+                    product.getStoreId(),
+                    productId,
+                    amount);
+        }
 
-    @Override
-    public void addToFavorites(Integer id, Integer clientId, Integer productId) {
-        jdbcTemplate.update("INSERT INTO Favorites VALUES (?,?,?)",
-                id,
-                clientId,
-                productId);
-    }
-
-    @Override
-    public void removeFromFavorites(Integer clientId, Integer productId) {
-        jdbcTemplate.update("DELETE FROM Favorites WHERE clientId = ? AND productId = ?",
-                clientId,
+        // обновляем поле количество продукта в зависимости от количества купленного
+        jdbcTemplate.update("UPDATE Product_amount SET amount = ? WHERE product_id = ?",
+                amountProduct - amount,
                 productId);
     }
 }

@@ -23,9 +23,17 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
     }
 
     @Override
-    public void create(Product product) {
-        jdbcTemplate.update("INSERT INTO Product VALUES (?,?,?,?,?)",
-                product.getName(), product.getPrice(), product.getCategory(), product.getBrand(), product.getAmount());
+    public void create(Integer amount, Product product) {
+        jdbcTemplate.update("INSERT INTO Product VALUES (?,?,?,?,?,?)",
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getCategory(),
+                product.getBrand(),
+                product.getStoreId());
+
+        jdbcTemplate.update("INSERT INTO Product_amount VALUES(?,?)", product.getId(), amount);
+
     }
 
     @Override
