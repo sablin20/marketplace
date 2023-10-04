@@ -21,14 +21,16 @@ public class ProductRepositorySqlImpl implements ProductRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public void create(Product product) {
+    public void create(Integer amount, Product product) {
         jdbcTemplate.update("INSERT INTO Product VALUES (?,?,?,?,?,?)",
                 product.getId(),
                 product.getName(),
                 product.getPrice(),
                 product.getCategory(),
                 product.getBrand(),
-                product.getAmount());
+                product.getStoreId());
+
+        jdbcTemplate.update("INSERT INTO Product_amount VALUES(?,?)", product.getId(), amount);
     }
 
     @Override
@@ -46,60 +48,46 @@ public class ProductRepositorySqlImpl implements ProductRepository {
     public List<Product> findProducts(String category, String name, String brand, String sortedName, String sortedPrice, BigDecimal price1, BigDecimal price2) {
 
         var condition = "";
-        var substringCategory = "";
-        var substringName = "";
-        var substringBrand = "";
-        var sortedByNameOrPrice = "";
-        var sortedByPriceBetween = "";
 
         if (category != null) {
             condition += " WHERE ";
-            substringCategory = String.format("category LIKE '%%%s%%'", category);
-            condition += substringCategory;
+            condition += String.format("category LIKE '%%%s%%'", category);
         }
 
         if (name != null) {
-            substringName = String.format("name LIKE '%%%s%%'",  name);
-            if (!condition.isEmpty()) {
-                condition += " AND ";
-            } else {
-                condition += " WHERE ";
-            }
-            condition += substringName;
+            condition = getString(condition);
+            condition += String.format("name LIKE '%%%s%%'",  name);
         }
 
         if (brand != null) {
-            substringBrand = String.format("brand LIKE '%%%s%%'", brand);
-            if (!condition.isEmpty()) {
-                condition += " AND ";
-            } else {
-                condition += " WHERE ";
-            }
-            condition += substringBrand;
+            condition = getString(condition);
+            condition += String.format("brand LIKE '%%%s%%'", brand);
         }
 
         if (price1 != null && price2 != null) {
-            sortedByPriceBetween = String.format("price BETWEEN %s AND %s", price1, price2);
-            if (!condition.isEmpty()) {
-                condition += " AND ";
-            } else {
-                condition += " WHERE ";
-            }
-            condition += sortedByPriceBetween;
+            condition = getString(condition);
+            condition += String.format("price BETWEEN %s AND %s", price1, price2);
         }
 
         if (sortedName != null && (sortedName.equals("ASC") || sortedName.equals("DESC"))) {
-            sortedByNameOrPrice = String.format(" ORDER BY name %s", sortedName);
-            condition += sortedByNameOrPrice;
-        }
-        if (sortedPrice != null && (sortedPrice.equals("ASC") || sortedPrice.equals("DESC"))) {
-            sortedByNameOrPrice = String.format(" ORDER BY price %s", sortedPrice);
-            condition += sortedByNameOrPrice;
+            condition += String.format(" ORDER BY name %s", sortedName);
         }
 
-        var resultSql = String.format("SELECT * FROM Product %s",
-                condition);
+        if (sortedPrice != null && (sortedPrice.equals("ASC") || sortedPrice.equals("DESC"))) {
+            condition += String.format(" ORDER BY price %s", sortedPrice);
+        }
+
+        var resultSql = String.format("SELECT * FROM Product %s", condition);
 
         return jdbcTemplate.query(resultSql, new BeanPropertyRowMapper<>(Product.class));
+    }
+
+    private String getString(String condition) {
+        if (!condition.isEmpty()) {
+            condition += " AND ";
+        } else {
+            condition += " WHERE ";
+        }
+        return condition;
     }
 }

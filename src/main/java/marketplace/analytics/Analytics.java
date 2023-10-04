@@ -14,13 +14,13 @@ public interface Analytics {
     //нужно получить всех продавцов(имя) и
     // количество категорий товаров которыми они барыжат
     // при учете, что категории PC и TV не должны учитываться в подсчете;
-    Map<String, Integer> findStoreNameAndAmountProductForSales();
+    List<Store> findStoreNameAndAmountProductForSales();
 
     //нужно получить пользователя(имя) и сколько он потратил на покупки какого-то бранда(бранд ты сам указываешь)
-    List<Client> findClientNameAndSumCashByBrand(String brand); /** ok **/
+    List<Client> findClientNameAndSumCashByBrand(String brand);
 
     //нужно получить продавца(имя) который продал больше всего какого-то бранда
-    List<String> findNameStoreByMaxSalesByBrand(String brand);
+    List<Store> findNameStoreByMaxSalesByBrand(String brand);
 
     //нужно получить всех, покупателя(имя) и продавца(имя) у которого этот покупатель больше всего купил раз
     Map<String, String> findNameClientAndNameStoreByMax(String clientId);

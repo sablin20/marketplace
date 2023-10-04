@@ -11,6 +11,5 @@ public class Product {
     private BigDecimal price;
     private String category;
     private String brand;
-    private int amount;
-
+    private Integer storeId;
 }

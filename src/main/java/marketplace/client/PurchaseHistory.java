@@ -9,5 +9,5 @@ public class PurchaseHistory {
     private Integer clientId;
     private Integer storeId;
     private Integer productId;
-
+    private Integer amount;
 }

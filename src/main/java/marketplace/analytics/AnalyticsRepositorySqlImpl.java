@@ -18,22 +18,31 @@ public class AnalyticsRepositorySqlImpl implements Analytics {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public Map<String, Integer> findStoreNameAndAmountProductForSales() {
-        return null;
+    public List<Store> findStoreNameAndAmountProductForSales() {
+         return jdbcTemplate.query("SELECT s.name, COUNT(p.category) " +
+                                "FROM Store s JOIN Product p ON s.id = p.store_id " +
+                                "WHERE p.category IN (SELECT category FROM p WHERE category NOT IN ('PC', 'TV')) " +
+                                "GROUP BY s.name", new BeanPropertyRowMapper<>(Store.class));
     }
 
     @Override
     public List<Client> findClientNameAndSumCashByBrand(String brand) {
-        return jdbcTemplate.query("SELECT DISTINCT Client.name, SUM(Product.price) " +
-                "FROM PurchaseHistory AS PH JOIN Client ON PH.clientId = Client.id " +
-                "JOIN Product ON PH.productId = Product.id " +
+        return jdbcTemplate.query("SELECT DISTINCT c.name, SUM(p.price) " +
+                "FROM PurchaseHistory ph JOIN Client c ON ph.client_id = c.id " +
+                "JOIN Product p ON ph.product_id = p.id " +
                 "WHERE brand = ? " +
-                "GROUP BY Client.name",
+                "GROUP BY c.name",
                 new BeanPropertyRowMapper<>(Client.class), brand);
     }
 
     @Override
-    public List<String> findNameStoreByMaxSalesByBrand(String brand) {
+    public List<Store> findNameStoreByMaxSalesByBrand(String brand) {
+//        return jdbcTemplate.query("SELECT DISTINCT s.name " +
+//                            "FROM Store s " +
+//                            "JOIN Purchase_history ph ON s.id = ph.store_id " +
+//                            "JOIN Product p ON p.store_id = s.id " +
+//                            "WHERE brand = ?",
+//                new BeanPropertyRowMapper<>(Store.class), brand);
         return null;
     }
 
