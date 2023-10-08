@@ -27,29 +27,4 @@ public class StoreRepositorySqlImpl implements StoreRepository {
         return jdbcTemplate.queryForObject("SELECT * FROM Store WHERE id = ?",
                 new BeanPropertyRowMapper<>(Store.class), id);
     }
-
-//    @Override
-//    public void deleteProductSales(Integer storeId, Integer productId) {
-//        jdbcTemplate.update("DELETE FROM Product WHERE store_id = ? AND product_id = ?", storeId, productId);
-//    }
-
-    @Override
-    public void updateProducts(Integer storeId, Product product) {
-        jdbcTemplate.update("""
-                            UPDATE Product SET
-                            id = ?,
-                            name = ?,
-                            price = ?,
-                            category = ?,
-                            brand = ?,
-                            store_id = ?
-                            WHERE store_id = ? AND id = ?""",
-                            product.getId(),
-                            product.getName(),
-                            product.getPrice(),
-                            product.getCategory(),
-                            product.getBrand(),
-                            product.getStoreId(),
-                            storeId, product.getId());
-    }
 }

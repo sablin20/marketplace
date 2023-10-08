@@ -19,6 +19,31 @@ import java.util.List;
 public class ProductRepositorySqlImpl implements ProductRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final static String SELECT_PRODUCT_SQL =  """
+            SELECT pa.amount, p.id, p.name, p.category, p.price, p.brand, s.name AS store_name
+            FROM Product_amount pa JOIN Product p ON pa.product_id = p.id
+            JOIN Store s ON s.id = p.store_id %s
+            """;
+
+    @Override
+    public void updateProducts(Integer storeId, Product product) {
+        jdbcTemplate.update("""
+                            UPDATE Product SET
+                            id = ?,
+                            name = ?,
+                            price = ?,
+                            category = ?,
+                            brand = ?,
+                            store_id = ?
+                            WHERE store_id = ? AND id = ?""",
+                            product.getId(),
+                            product.getName(),
+                            product.getPrice(),
+                            product.getCategory(),
+                            product.getBrand(),
+                            product.getStoreId(),
+                            storeId, product.getId());
+    }
 
     @Override
     public void create(Integer amount, Product product) {
@@ -33,6 +58,11 @@ public class ProductRepositorySqlImpl implements ProductRepository {
         jdbcTemplate.update("INSERT INTO Product_amount VALUES(?,?)", product.getId(), amount);
     }
 
+        @Override
+        public ProductDto buyProduct(Integer id, Integer clientId, Integer productId, Integer amount) {
+            return null;
+        }
+
     @Override
     public Product findById(Integer id) {
         return jdbcTemplate.queryForObject("SELECT * FROM Product WHERE id = ?",
@@ -45,7 +75,7 @@ public class ProductRepositorySqlImpl implements ProductRepository {
     }
 
     @Override
-    public List<Product> findProducts(String category, String name, String brand, String sortedName, String sortedPrice, BigDecimal price1, BigDecimal price2) {
+    public List<ProductDto> findProducts(String category, String name, String brand, String sortedName, String sortedPrice, BigDecimal price1, BigDecimal price2) {
 
         var condition = "";
 
@@ -77,9 +107,26 @@ public class ProductRepositorySqlImpl implements ProductRepository {
             condition += String.format(" ORDER BY price %s", sortedPrice);
         }
 
-        var resultSql = String.format("SELECT * FROM Product %s", condition);
+        var resultSql = String.format(SELECT_PRODUCT_SQL, condition);
 
-        return jdbcTemplate.query(resultSql, new BeanPropertyRowMapper<>(Product.class));
+        return jdbcTemplate.query(resultSql, (rs, rowNum) -> {
+            int amountResult = rs.getInt("amount");
+            String amountStr = switch (amountResult) {
+                case 0 -> "Not available";
+                case 1, 2, 3 -> "There are few of this product left";
+                case 4, 5, 6, 7 -> "This product is enough";
+                default -> "There is a lot of this product in stock";
+            };
+            return ProductDto.builder()
+                    .id(rs.getInt("id"))
+                    .name(rs.getString("name"))
+                    .category(rs.getString("category"))
+                    .brand(rs.getString("brand"))
+                    .price(rs.getBigDecimal("price"))
+                    .storeId(rs.getString("store_name"))
+                    .amount(amountStr)
+                    .build();
+        });
     }
 
     private String getString(String condition) {

@@ -4,7 +4,7 @@ CREATE TABLE Product (
  price BIGINT NOT NULL,
  category VARCHAR(50) NOT NULL,
  brand VARCHAR(50) NOT NULL,
- amount INT
+ store_id INTEGER NOT NULL
 );
 
 CREATE TABLE Store (
@@ -18,21 +18,14 @@ CREATE TABLE Client (
     last_name VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE Favorites (
+CREATE TABLE Purchase_history (
     id SERIAL PRIMARY KEY NOT NULL,
-    clientId INTEGER NOT NULL,
-    productId INTEGER NOT NULL
+    client_id INTEGER NOT NULL,
+    product_id INTEGER NOT NULL,
+    amount INTEGER NOT NULL
 );
 
-CREATE TABLE PurchaseHistory (
-    id SERIAL PRIMARY KEY NOT NULL,
-    clientId INTEGER NOT NULL,
-    storeId INTEGER NOT NULL,
-    productId INTEGER NOT NULL
-);
-
-CREATE TABLE ProductInStock (
-    id SERIAL PRIMARY KEY NOT NULL,
-    storeId INTEGER NOT NULL,
-    productId INTEGER NOT NULL
+CREATE TABLE Product_amount (
+    product_id INTEGER NOT NULL,
+    amount INTEGER NOT NULL
 );
