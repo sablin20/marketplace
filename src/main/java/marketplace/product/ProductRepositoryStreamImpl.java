@@ -59,33 +59,33 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
             return requestSql().stream().
                     filter(p -> p.getCategory().matches(category)).
                     sorted((n1, n2) -> n2.getName().compareTo(n1.getName())).
-                    collect(Collectors.toList());
+                    toList();
         }
 
         if (sorted.equals("ASC")) {
             return requestSql().stream().
                     filter(p -> p.getCategory().matches(category)).
                     sorted().
-                    collect(Collectors.toList());
+                    toList();
         }
 
         if (price.equals("DESC")) {
             return requestSql().stream().
                     filter(p -> p.getCategory().matches(category)).
                     sorted((p1, p2) -> p2.getPrice().compareTo(p1.getPrice())).
-                    collect(Collectors.toList());
+                    toList();
         }
 
         if (price.equals("ASC")) {
             return requestSql().stream().
                     filter(p -> p.getCategory().matches(category)).
                     sorted((p1, p2) -> p1.getPrice().compareTo(p2.getPrice())).
-                    collect(Collectors.toList());
+                    toList();
         }
 
         return requestSql().stream().
                 filter(p -> p.getCategory().matches(category)).
-                collect(Collectors.toList());
+                toList();
     }
 
 
@@ -94,33 +94,33 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
             return requestSql().stream().
                     filter(p -> p.getCategory().matches(category) && p.getBrand().matches(brand)).
                     sorted((n1, n2) -> n2.getName().compareTo(n1.getName())).
-                    collect(Collectors.toList());
+                    toList();
         }
 
         if (sorted.equals("ASC")) {
             return requestSql().stream().
                     filter(p -> p.getCategory().matches(category) && p.getBrand().matches(brand)).
                     sorted().
-                    collect(Collectors.toList());
+                    toList();
         }
 
         if (price.equals("DESC")) {
             return requestSql().stream().
                     filter(p -> p.getCategory().matches(category) && p.getBrand().matches(brand)).
                     sorted((p1, p2) -> p2.getPrice().compareTo(p1.getPrice())).
-                    collect(Collectors.toList());
+                    toList();
         }
 
         if (price.equals("ASC")) {
             return requestSql().stream().
                     filter(p -> p.getCategory().matches(category) && p.getBrand().matches(brand)).
                     sorted((p1, p2) -> p1.getPrice().compareTo(p2.getPrice())).
-                    collect(Collectors.toList());
+                    toList();
         }
 
         return requestSql().stream().
                 filter(p -> p.getCategory().matches(category) && p.getBrand().matches(brand)).
-                collect(Collectors.toList());
+                toList();
     }
 
 
@@ -129,33 +129,33 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
             return requestSql().stream().
                     filter(p -> p.getCategory().matches(category) && p.getName().matches(name)).
                     sorted((n1, n2) -> n2.getName().compareTo(n1.getName())).
-                    collect(Collectors.toList());
+                    toList();
         }
 
         if (sorted.equals("ASC")) {
             return requestSql().stream().
                     filter(p -> p.getCategory().matches(category) && p.getName().matches(name)).
                     sorted().
-                    collect(Collectors.toList());
+                    toList();
         }
 
         if (price.equals("DESC")) {
             return requestSql().stream().
                     filter(p -> p.getCategory().matches(category) && p.getName().matches(name)).
                     sorted((p1, p2) -> p2.getPrice().compareTo(p1.getPrice())).
-                    collect(Collectors.toList());
+                    toList();
         }
 
         if (price.equals("ASC")) {
             return requestSql().stream().
                     filter(p -> p.getCategory().matches(category) && p.getName().matches(name)).
                     sorted((p1, p2) -> p1.getPrice().compareTo(p2.getPrice())).
-                    collect(Collectors.toList());
+                    toList();
         }
 
         return requestSql().stream().
                 filter(p -> p.getCategory().matches(category) && p.getName().matches(name)).
-                collect(Collectors.toList());
+                toList();
     }
 
 
@@ -164,33 +164,33 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
             return requestSql().stream().
                     filter(p -> p.getCategory().matches(category) && p.getName().matches(name) && p.getBrand().matches(brand)).
                     sorted((n1, n2) -> n2.getName().compareTo(n1.getName())).
-                    collect(Collectors.toList());
+                    toList();
         }
 
         if (sorted.equals("ASC")) {
             return requestSql().stream().
                     filter(p -> p.getCategory().matches(category) && p.getName().matches(name) && p.getBrand().matches(brand)).
                     sorted().
-                    collect(Collectors.toList());
+                    toList();
         }
 
         if (price.equals("DESC")) {
             return requestSql().stream().
                     filter(p -> p.getCategory().matches(category) && p.getName().matches(name) && p.getBrand().matches(brand)).
                     sorted((p1, p2) -> p2.getPrice().compareTo(p1.getPrice())).
-                    collect(Collectors.toList());
+                    toList();
         }
 
         if (price.equals("ASC")) {
             return requestSql().stream().
                     filter(p -> p.getCategory().matches(category) && p.getName().matches(name) && p.getBrand().matches(brand)).
                     sorted((p1, p2) -> p1.getPrice().compareTo(p2.getPrice())).
-                    collect(Collectors.toList());
+                    toList();
         }
 
         return requestSql().stream().
                 filter(p -> p.getCategory().matches(category) && p.getName().matches(name) && p.getBrand().matches(brand)).
-                collect(Collectors.toList());
+                toList();
     }
 
     public List<Product> findByBrand(String brand, String sorted, String price) {
@@ -198,31 +198,31 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
             return requestSql().stream().
                     filter(p -> p.getBrand().matches(brand)).
                     sorted((n1, n2) -> n2.getName().compareTo(n1.getName())).
-                    collect(Collectors.toList());
+                    toList();
         }
 
         if (sorted.equals("ASC")) {
             return requestSql().stream().
                     filter(p -> p.getBrand().matches(brand)).
                     sorted().
-                    collect(Collectors.toList());
+                    toList();
         }
 
         if (price.equals("DESC")) {
             return requestSql().stream().
                     filter(p -> p.getBrand().matches(brand)).
                     sorted((p1, p2) -> p2.getPrice().compareTo(p1.getPrice())).
-                    collect(Collectors.toList());
+                    toList();
         }
 
         if (price.equals("ASC")) {
             return requestSql().stream().
                     filter(p -> p.getBrand().matches(brand)).
                     sorted((p1, p2) -> p1.getPrice().compareTo(p2.getPrice())).
-                    collect(Collectors.toList());
+                    toList();
         }
 
-        return requestSql().stream().filter(p -> p.getBrand().matches(brand)).collect(Collectors.toList());
+        return requestSql().stream().filter(p -> p.getBrand().matches(brand)).toList();
     }
 
 
@@ -231,28 +231,28 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
             return requestSql().stream().
                     filter(p -> p.getName().matches(name)).
                     sorted((n1, n2) -> n2.getName().compareTo(n1.getName())).
-                    collect(Collectors.toList());
+                    toList();
         }
 
         if (sorted.equals("ASC")) {
             return requestSql().stream().
                     filter(p -> p.getName().matches(name)).
                     sorted().
-                    collect(Collectors.toList());
+                    toList();
         }
 
         if (price.equals("DESC")) {
             return requestSql().stream().
                     filter(p -> p.getName().matches(name)).
                     sorted((p1, p2) -> p2.getPrice().compareTo(p1.getPrice())).
-                    collect(Collectors.toList());
+                    toList();
         }
 
         if (price.equals("ASC")) {
             return requestSql().stream().
                     filter(p -> p.getName().matches(name)).
                     sorted().
-                    collect(Collectors.toList());
+                    toList();
         }
 
         return requestSql().stream().filter(p -> p.getName().matches(name)).collect(Collectors.toList());
@@ -264,33 +264,33 @@ public class ProductRepositoryStreamImpl implements ProductRepository{
             return requestSql().stream().
                     filter(p -> p.getBrand().matches(brand) && p.getName().matches(name)).
                     sorted((n1, n2) -> n2.getName().compareTo(n1.getName())).
-                    collect(Collectors.toList());
+                    toList();
         }
 
         if (sorted.equals("ASC")) {
             return requestSql().stream().
                     filter(p -> p.getBrand().matches(brand) && p.getName().matches(name)).
                     sorted((p, p1) -> p.getPrice().compareTo(p1.getPrice())).
-                    collect(Collectors.toList());
+                    toList();
         }
 
         if (price.equals("DESC")) {
             return requestSql().stream().
                     filter(p -> p.getBrand().matches(brand) && p.getName().matches(name)).
                     sorted((p1, p2) -> p2.getPrice().compareTo(p1.getPrice())).
-                    collect(Collectors.toList());
+                    toList();
         }
 
         if (price.equals("ASC")) {
             return requestSql().stream().
                     filter(p -> p.getBrand().matches(brand) && p.getName().matches(name)).
                     sorted((p, p1) -> p.getPrice().compareTo(p1.getPrice())).
-                    collect(Collectors.toList());
+                    toList();
         }
 
         return requestSql().stream().
                 filter(p -> p.getBrand().matches(brand) && p.getName().matches(name)).
-                collect(Collectors.toList());
+                toList();
     }
 
     @Override

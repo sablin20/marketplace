@@ -35,20 +35,21 @@ public class StoreRepositorySqlImpl implements StoreRepository {
 
     @Override
     public void updateProducts(Integer storeId, Product product) {
-        jdbcTemplate.update("UPDATE Product SET " +
-                "id = ?, " +
-                "name = ?, " +
-                "price = ?, " +
-                "category = ?, " +
-                "brand = ?, " +
-                "store_id = ? " +
-                "WHERE store_id = ? AND product_id = ?",
-                product.getId(),
-                product.getName(),
-                product.getPrice(),
-                product.getCategory(),
-                product.getBrand(),
-                product.getStoreId(),
-                storeId, product.getId());
+        jdbcTemplate.update("""
+                            UPDATE Product SET
+                            id = ?,
+                            name = ?,
+                            price = ?,
+                            category = ?,
+                            brand = ?,
+                            store_id = ?
+                            WHERE store_id = ? AND id = ?""",
+                            product.getId(),
+                            product.getName(),
+                            product.getPrice(),
+                            product.getCategory(),
+                            product.getBrand(),
+                            product.getStoreId(),
+                            storeId, product.getId());
     }
 }

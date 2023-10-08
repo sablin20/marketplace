@@ -21,8 +21,8 @@ CREATE TABLE Client (
 CREATE TABLE Purchase_history (
     id SERIAL PRIMARY KEY NOT NULL,
     client_id INTEGER NOT NULL,
-    store_id INTEGER NOT NULL,
-    product_id INTEGER NOT NULL
+    product_id INTEGER NOT NULL,
+    amount INTEGER NOT NULL
 );
 
 CREATE TABLE Product_amount (
