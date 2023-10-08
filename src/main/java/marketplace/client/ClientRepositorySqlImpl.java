@@ -51,14 +51,14 @@ public class ClientRepositorySqlImpl implements ClientRepository {
             throw new ProductNotFoundException("Product not found");
         }
 
-        var product = jdbcTemplate.queryForObject("SELECT * FROM Product WHERE product_id = ?",
+        var product = jdbcTemplate.queryForObject("SELECT * FROM Product WHERE id = ?",
                                                             new BeanPropertyRowMapper<>(Product.class), productId);
         // проверяем что продукт есть и его количество больше либо равно запрошенному на покупку количеству
         if (product != null && amountProduct >= amount) {
-            jdbcTemplate.update("INSERT INTO PurchaseHistory VALUES (?,?,?,?,?)",
+            jdbcTemplate.update("INSERT INTO PurchaseHistory VALUES (?,?,?,?)",
                     id,
                     clientId,
-                    product.getStoreId(),
+//                    product.getStoreId(),
                     productId,
                     amount);
         }

@@ -18,21 +18,24 @@ public class AnalyticsRepositorySqlImpl implements Analytics {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public List<Store> findStoreNameAndAmountProductForSales() {
-         return jdbcTemplate.query("SELECT s.name, COUNT(p.category) " +
-                                "FROM Store s JOIN Product p ON s.id = p.store_id " +
-                                "WHERE p.category IN (SELECT category FROM p WHERE category NOT IN ('PC', 'TV')) " +
-                                "GROUP BY s.name", new BeanPropertyRowMapper<>(Store.class));
+    public List<Store> findStoreNameAndAmountProductForSales() { // OK
+         return jdbcTemplate.query("""
+                                        SELECT s.name, COUNT(p.category)
+                                        FROM Store s JOIN Product p ON s.id = p.store_id
+                                        WHERE p.category IN(SELECT category FROM p WHERE category NOT IN ('PC', 'TV'))
+                                        GROUP BY s.name""",
+                                        new BeanPropertyRowMapper<>(Store.class));
     }
 
     @Override
-    public List<Client> findClientNameAndSumCashByBrand(String brand) {
-        return jdbcTemplate.query("SELECT DISTINCT c.name, SUM(p.price) " +
-                "FROM PurchaseHistory ph JOIN Client c ON ph.client_id = c.id " +
-                "JOIN Product p ON ph.product_id = p.id " +
-                "WHERE brand = ? " +
-                "GROUP BY c.name",
-                new BeanPropertyRowMapper<>(Client.class), brand);
+    public List<Client> findClientNameAndSumCashByBrand(String brand) { // OK
+        return jdbcTemplate.query("""
+                                        SELECT DISTINCT c.name, SUM(p.price)
+                                        FROM Purchase_history ph JOIN Client c ON ph.client_id = c.id
+                                        JOIN Product p ON ph.product_id = p.id
+                                        WHERE brand = ?
+                                        GROUP BY c.name""",
+                                        new BeanPropertyRowMapper<>(Client.class), brand);
     }
 
     @Override
@@ -67,23 +70,38 @@ public class AnalyticsRepositorySqlImpl implements Analytics {
     }
 
     @Override
-    public BigDecimal findAvgPriceByCategory(String category) {
-        return null;
+    public Product findAvgPriceByCategory(String category) { // OK
+        return jdbcTemplate.queryForObject("SELECT AVG(price) FROM Product WHERE category = ?",
+                new BeanPropertyRowMapper<>(Product.class), category);
     }
 
     @Override
-    public Map<String, BigDecimal> findCategoryAndMaxPrice(String category) {
-        return null;
+    public Product findCategoryAndMaxPrice(String category) { // OK
+        return jdbcTemplate.queryForObject("""
+                                                SELECT category, MAX(price) 
+                                                FROM Product WHERE category = ? 
+                                                GROUP BY category;""",
+                                                new BeanPropertyRowMapper<>(Product.class), category);
     }
 
     @Override
-    public Map<Product, String> findProductByMaxPriceBrand() {
-        return null;
+    public Product findProductByMaxPriceBrand() { // OK
+        return jdbcTemplate.queryForObject("""
+                                                SELECT DISTINCT brand, MAX(price)
+                                                FROM Product
+                                                GROUP BY brand;""",
+                                                new BeanPropertyRowMapper<>(Product.class));
     }
 
     @Override
-    public Map<Store, Integer> findStoreAndAmountProductsOneBrand(String brand) {
-        return null;
+    public Store findStoreAndAmountProductsOneBrand(String brand) { // OK
+        return jdbcTemplate.queryForObject("""
+                                                SELECT s.name AS store_name, pa.amount AS amount_product
+                                                FROM Store s
+                                                JOIN Product p on s.id = p.store_id
+                                                JOIN Product_amount pa on p.id = pa.product_id
+                                                WHERE brand = ? AND pa.amount >= 3;""",
+                                                new BeanPropertyRowMapper<>(Store.class), brand);
     }
 
     @Override
@@ -92,7 +110,14 @@ public class AnalyticsRepositorySqlImpl implements Analytics {
     }
 
     @Override
-    public Map<Client, BigDecimal> findClientAndCashByStore(String storeId) {
-        return null;
+    public List<Client> findClientAndCashByStore(String storeId) { // OK
+        return jdbcTemplate.query("""
+                                        SELECT c.name AS client_name, SUM(p.price) AS sum_cash
+                                        FROM Client c
+                                        JOIN Purchase_history ph ON c.id = ph.client_id
+                                        JOIN Product p ON p.id = ph.product_id
+                                        WHERE store_id = ?
+                                        GROUP BY c.name;""",
+                                        new BeanPropertyRowMapper<>(Client.class), storeId);
     }
 }
