@@ -24,12 +24,4 @@ public class ClientController {
     public Client getById(@RequestParam("id") Integer id) {
         return clientRepository.findById(id);
     }
-
-    @PostMapping("/buy")
-    public void buyProduct(@RequestParam("id") Integer id,
-                           @RequestParam("clientId") Integer clientId,
-                           @RequestParam("productId") Integer productId,
-                           @RequestParam("amount") Integer amount) {
-        clientRepository.buyProduct(id, clientId, productId, amount);
-    }
 }

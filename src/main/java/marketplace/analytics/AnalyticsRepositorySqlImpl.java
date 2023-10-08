@@ -39,40 +39,46 @@ public class AnalyticsRepositorySqlImpl implements Analytics {
     }
 
     @Override
-    public List<Store> findNameStoreByMaxSalesByBrand(String brand) {
-//        return jdbcTemplate.query("SELECT DISTINCT s.name " +
-//                            "FROM Store s " +
-//                            "JOIN Purchase_history ph ON s.id = ph.store_id " +
-//                            "JOIN Product p ON p.store_id = s.id " +
-//                            "WHERE brand = ?",
-//                new BeanPropertyRowMapper<>(Store.class), brand);
-        return null;
+    public List<Store> findNameStoreByMaxSalesByBrand(String brand) { //OK
+        return jdbcTemplate.query("""
+                                    SELECT DISTINCT s.name AS name_store, MAX(ph.amount)
+                                    FROM Product p
+                                    JOIN Purchase_history ph ON p.id = ph.product_id
+                                    JOIN Store s ON s.id = p.store_id
+                                    JOIN Product_amount pa ON pa.product_id = p.id
+                                    WHERE brand = ?
+                                    GROUP BY s.name
+                                    HAVING MAX(ph.amount) > COUNT(ph.amount);""",
+                                    new BeanPropertyRowMapper<>(Store.class), brand);
     }
 
     @Override
-    public Map<String, String> findNameClientAndNameStoreByMax(String clientId) {
-        return null;
+    public Client findNameClientAndCountIn3Category(String clientId) { //OK
+        return jdbcTemplate.queryForObject("""
+                                                SELECT c.name, COUNT(ph.amount)
+                                                FROM Client c
+                                                JOIN Purchase_history ph on c.id = ph.client_id
+                                                JOIN Product p ON p.id = ph.product_id
+                                                WHERE c.id = ?
+                                                GROUP BY c.name
+                                                HAVING COUNT(DISTINCT category) >= 3;""",
+                                                new BeanPropertyRowMapper<>(Client.class), clientId);
     }
 
     @Override
-    public Map<String, String> findNameClientAndNameStoreByMaxCash(String clientId) {
-        return null;
-    }
-
-    @Override
-    public Map<String, Integer> findNameClientAndCountIn3Category(String clientId) {
-        return null;
-    }
-
-    @Override
-    public Map<String, Integer> findNameBrandAndCountCategoryByPrice() {
-        return null;
+    public List<Product> findNameBrandAndAmountCategoryByPrice() { //OK
+        return jdbcTemplate.query("""
+                                    SELECT brand, COUNT(DISTINCT category) AS amount_category
+                                    FROM Product
+                                    WHERE price >= 5000
+                                    GROUP BY brand;""",
+                                    new BeanPropertyRowMapper<>(Product.class));
     }
 
     @Override
     public Product findAvgPriceByCategory(String category) { // OK
         return jdbcTemplate.queryForObject("SELECT AVG(price) FROM Product WHERE category = ?",
-                new BeanPropertyRowMapper<>(Product.class), category);
+                                                new BeanPropertyRowMapper<>(Product.class), category);
     }
 
     @Override
@@ -105,11 +111,6 @@ public class AnalyticsRepositorySqlImpl implements Analytics {
     }
 
     @Override
-    public Map<Store, BigDecimal> findStoreAndSumCashByBrand(String brand) {
-        return null;
-    }
-
-    @Override
     public List<Client> findClientAndCashByStore(String storeId) { // OK
         return jdbcTemplate.query("""
                                         SELECT c.name AS client_name, SUM(p.price) AS sum_cash
@@ -120,4 +121,18 @@ public class AnalyticsRepositorySqlImpl implements Analytics {
                                         GROUP BY c.name;""",
                                         new BeanPropertyRowMapper<>(Client.class), storeId);
     }
+
+    @Override
+    public Map<String, String> findNameClientAndNameStoreByMax(String clientId) {
+        return null;
+    }
+
+    @Override
+    public Map<String, String> findNameClientAndNameStoreByMaxCash(String clientId) {
+        return null;
+    }
+
+    @Override
+    public Map<Store, BigDecimal> findStoreAndSumCashByBrand(String brand) {return null;}
+
 }

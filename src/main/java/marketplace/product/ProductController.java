@@ -29,13 +29,19 @@ public class ProductController {
     }
 
     @GetMapping("/findProducts")
-    public List<Product> getProducts(@RequestParam(required = false, value = "category") String category,
-                                     @RequestParam(required = false, value = "name") String name,
-                                     @RequestParam(required = false, value = "brand") String brand,
-                                     @RequestParam(required = false, value = "sortedName") String sortedName,
-                                     @RequestParam(required = false, value = "sortedPrice") String sortedPrice,
-                                     @RequestParam(required = false, value = "priceFirst") BigDecimal priceFirst,
-                                     @RequestParam(required = false, value = "priceLast") BigDecimal priceLast) {
+    public List<ProductDto> getProducts(@RequestParam(required = false, value = "category") String category,
+                                        @RequestParam(required = false, value = "name") String name,
+                                        @RequestParam(required = false, value = "brand") String brand,
+                                        @RequestParam(required = false, value = "sortedName") String sortedName,
+                                        @RequestParam(required = false, value = "sortedPrice") String sortedPrice,
+                                        @RequestParam(required = false, value = "priceFirst") BigDecimal priceFirst,
+                                        @RequestParam(required = false, value = "priceLast") BigDecimal priceLast) {
         return repository.findProducts(category, name, brand, sortedName, sortedPrice, priceFirst, priceLast);
+    }
+
+    @PutMapping("/")
+    public void updateProducts(@RequestParam("storeId") Integer storeId,
+                               @RequestBody Product product) {
+        repository.updateProducts(storeId, product);
     }
 }

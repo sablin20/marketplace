@@ -29,10 +29,10 @@ public interface Analytics {
     Map<String, String> findNameClientAndNameStoreByMaxCash(String clientId);
 
     //показать покупателя(имя) и кол-во покупок которые он сделал, если товары, которые он купил были минимум из 3х разных категорий
-    Map<String, Integer> findNameClientAndCountIn3Category(String clientId);
+    Client findNameClientAndCountIn3Category(String clientId);
 
     //показать все бренды и колчичество категорий в котрых они представлены при учете что цена у товара должна быть не менее 5000
-    Map<String, Integer> findNameBrandAndCountCategoryByPrice();
+    List<Product> findNameBrandAndAmountCategoryByPrice();
 
     //показать все показать среднюю цену товара для категории (категорию передать надо)
     Product findAvgPriceByCategory(String category);
