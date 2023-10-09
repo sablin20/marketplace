@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @Primary для того чтобы не было неоднозначности при запуске и внедрении зависимости т.к.
@@ -58,10 +59,50 @@ public class ProductRepositorySqlImpl implements ProductRepository {
         jdbcTemplate.update("INSERT INTO Product_amount VALUES(?,?)", product.getId(), amount);
     }
 
-        @Override
-        public ProductDto buyProduct(Integer id, Integer clientId, Integer productId, Integer amount) {
-            return null;
-        }
+    @Override
+    public ProductDto buyProduct(Integer id, Integer clientId, Integer productId, Integer amount) {
+
+        // запрашиваем данные по продукту
+        var productDTO = jdbcTemplate.queryForObject("""
+            SELECT pa.amount, p.id AS product_id, p.name AS product_name, p.category, p.price, p.brand, s.name AS store_name
+            FROM Product_amount pa JOIN Product p ON pa.product_id = p.id
+            JOIN Store s ON s.id = p.store_id
+            WHERE p.id = ?
+            """, (rs, rowNum) -> {
+
+            int amountResult = rs.getInt("amount");
+
+            //проверяем что количество запрошенного продукта удовлетворяет наличие и обновляем таблицу Product_amount
+            if (amountResult >= amount) {
+                jdbcTemplate.update("UPDATE Product_amount SET amount = ? WHERE product_id = ?",
+                        amountResult - amount, productId);
+            }
+
+            String amountStr = switch (amountResult) {
+                case 0 -> "Not available";
+                case 1, 2, 3 -> String.format("There are few of this product left. Congratulations on your purchase %d %s!", amount, rs.getString("product_name"));
+                case 4, 5, 6, 7 -> String.format("This product is enough. Congratulations on your purchase %d %s!", amount, rs.getString("product_name"));
+                default -> String.format("There is a lot of this product in stock. Congratulations on your purchase %d %s!", amount, rs.getString("product_name"));
+            };
+
+            // формируем productDto который вернём клиенты после покупки
+            return ProductDto.builder()
+                    .id(rs.getInt("product_id"))
+                    .name(rs.getString("product_name"))
+                    .category(rs.getString("category"))
+                    .brand(rs.getString("brand"))
+                    .price(rs.getBigDecimal("price"))
+                    .storeName(rs.getString("store_name"))
+                    .amount(amountStr)
+                    .build();
+        }, productId);
+
+        // добавляем новую запись в таблицу PurchaseHistory
+        jdbcTemplate.update("INSERT INTO Purchase_history VALUES (?,?,?,?)",
+                id, clientId, productId, amount);
+
+        return productDTO;
+    }
 
     @Override
     public Product findById(Integer id) {
@@ -123,7 +164,7 @@ public class ProductRepositorySqlImpl implements ProductRepository {
                     .category(rs.getString("category"))
                     .brand(rs.getString("brand"))
                     .price(rs.getBigDecimal("price"))
-                    .storeId(rs.getString("store_name"))
+                    .storeName(rs.getString("store_name"))
                     .amount(amountStr)
                     .build();
         });
@@ -137,4 +178,7 @@ public class ProductRepositorySqlImpl implements ProductRepository {
         }
         return condition;
     }
+
+
+
 }

@@ -44,4 +44,12 @@ public class ProductController {
                                @RequestBody Product product) {
         repository.updateProducts(storeId, product);
     }
+
+    @PostMapping("/buy")
+    public ProductDto buyProduct(@RequestParam("id") Integer id,
+                                 @RequestParam("clientId") Integer clientId,
+                                 @RequestParam("productId") Integer productId,
+                                 @RequestParam("amount") Integer amount) {
+        return repository.buyProduct(id, clientId, productId, amount);
+    }
 }

@@ -40,6 +40,9 @@ GET http://localhost:8888/product/?id=2
 ### get products by params
 GET http://localhost:8888/product/findProducts?brand=LG&category=TV&sortedPrice=DESC
 
+### buy product
+POST http://localhost:8888/product/buy?id=10&clientId=1&productId=4&amount=2
+
 ******************* STORE ***************************************************************************************************
 
 ### get store by id

@@ -12,6 +12,6 @@ public class ProductDto {
     BigDecimal price;
     String category;
     String brand;
-    String storeId;
+    String storeName;
     String amount;
 }

@@ -1,4 +1,3 @@
-
 ************* CLIENT *************************************************************************************************************
 
 ### create Client
@@ -12,35 +11,19 @@ Content-Type: application/json
 }
 
 ### delete client by id
-DELETE http://localhost:8888/client/delete?id=1
+DELETE http://localhost:8888/client/1
 
 ### find Client by id
-GET http://localhost:8888/client/?id=5
-
-### buy product
-POST http://localhost:8888/client/buy?id=2&clientId=1&productId=1
+GET http://localhost:8888/client/?id=1
 
 ********************* PRODUCT **************************************************************************************************
 
 ### create product
-POST http://localhost:8888/product/create
+POST http://localhost:8888/product/create?amount=22
 Content-Type: application/json
 
 {
-  "id": 1,
-  "name": "Iphone14",
-  "price": 100000,
-  "category": "Smartphone",
-  "brand": "Apple",
-  "storeId": 1
-}
-
-### create product
-POST http://localhost:8888/product/create
-Content-Type: application/json
-
-{
-  "id": 2,
+  "id": 77,
   "name": "Iphone8",
   "price": 50000,
   "category": "Smartphone",
@@ -49,24 +32,27 @@ Content-Type: application/json
 }
 
 ### delete product by id
-DELETE http://localhost:8888/product/remove?id=1
+DELETE http://localhost:8888/product/1
 
-### find product by id
-GET http://localhost:8888/product/findById?id=1
+### get product by id
+GET http://localhost:8888/product/?id=2
 
-### find products by params
-GET http://localhost:8888/product/findProducts?sortedPrice=DESC
+### get products by params
+GET http://localhost:8888/product/findProducts?brand=LG&category=TV&sortedPrice=DESC
+
+### buy product
+POST http://localhost:8888/product/buy?id=10&clientId=1&productId=4&amount=2
 
 ******************* STORE ***************************************************************************************************
 
-### find store by id
-GET http://localhost:8888/store/find?id=1
+### get store by id
+GET http://localhost:8888/store/?id=9
 
 ### create store
 POST http://localhost:8888/store/create
 Content-Type: application/json
 
 {
-  "id": 1,
-  "name": "DNS"
+  "id": 9,
+  "name": "Amazon"
 }
