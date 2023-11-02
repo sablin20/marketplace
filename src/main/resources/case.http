@@ -73,7 +73,7 @@ GET http://localhost:8888/analytics/3?brand=Apple
 GET http://localhost:8888/analytics/4/4
 
 ### 5
-GET http://localhost:8888/analytics/5
+GET http://localhost:8888/analytics/5?priceLimit=5000
 
 ### 6
 GET http://localhost:8888/analytics/6?category=TV

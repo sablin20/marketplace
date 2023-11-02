@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 @Value
 @Builder
-public class ResponseEntityDtoSumCash {
+public class ResponseDtoAvgPrice {
     String name;
-    BigDecimal sumCash;
+    BigDecimal avgPrice;
 }

@@ -2,6 +2,7 @@ package marketplace.analytics;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import java.math.BigInteger;
 import java.util.List;
 
 @RestController
@@ -9,61 +10,61 @@ import java.util.List;
 @RequestMapping("/analytics")
 public class AnalyticsController {
 
-    private final AnalyticsRepository repository;
+    private final AnalyticsDao analyticsDao;
 
     @GetMapping("/1")
-    public List<ResponseEntityDto> findNameStoreAndAmountCategoryForSales() {
-        return repository.findNameStoreAndAmountCategoryForSales();
+    public List<ResponseDto> getNameStoreAndAmountCategory() {
+        return analyticsDao.findNameStoreAndAmountCategoryForSales();
     }
 
     @GetMapping("/2")
-    public List<ResponseEntityDtoSumCash> findNameClientAndSumCashByBrand(@RequestParam("brand") String brand) {
-        return repository.findNameClientAndSumCashByBrand(brand);
+    public List<ResponseDtoSumMoney> getNameClientAndMoneySpentOnBrand(@RequestParam("brand") String brand) {
+        return analyticsDao.findNameClientAndSumCashByBrand(brand);
     }
 
     @GetMapping("/3")
-    public List<ResponseEntityDto> findNameStoreByMaxSalesByBrand(@RequestParam("brand") String brand) {
-        return repository.findNameStoreByMaxSalesByBrand(brand);
+    public List<ResponseDto> getNameStoreByMaxSoldBrand(@RequestParam("brand") String brand) {
+        return analyticsDao.findNameStoreByMaxSalesByBrand(brand);
     }
 
     @GetMapping("/4/{clientId}")
-    public ResponseEntityDto findNameClientAndCountIn3Category(@PathVariable Integer clientId) {
-        return repository.findNameClientAndCountIn3Category(clientId);
+    public ResponseDto getNameClientAndNumberOfPurchases(@PathVariable Integer clientId) {
+        return analyticsDao.findNameClientAndCountIn3Category(clientId);
     }
 
     @GetMapping("/5")
-    public List<ResponseEntityDto> findNameBrandAndAmountCategoryByPrice() {
-        return repository.findNameBrandAndAmountCategoryByPrice();
+    public List<ResponseDto> getBrandAndAmountCategory(@RequestParam("priceLimit") BigInteger priceLimit) {
+        return analyticsDao.findNameBrandAndAmountCategoryByPrice(priceLimit);
     }
 
     @GetMapping("/6")
-    public ResponseEntityDtoAvgPrice findAvgPriceByCategory(@RequestParam("category") String category) {
-        return repository.findAvgPriceByCategory(category);
+    public ResponseDtoAvgPrice getAvgPriceByCategory(@RequestParam("category") String category) {
+        return analyticsDao.findAvgPriceByCategory(category);
     }
 
     @GetMapping("/7")
-    public ResponseEntityDtoMaxPrice findCategoryAndMaxPrice(@RequestParam("category") String category) {
-        return repository.findCategoryAndMaxPrice(category);
+    public ResponseDtoMaxPrice getCategoryAndMaxPrice(@RequestParam("category") String category) {
+        return analyticsDao.findCategoryAndMaxPrice(category);
     }
 
     @GetMapping("/8")
-    public List<ResponseEntityDtoMaxPrice> findProductByMaxPriceBrand() {
-        return repository.findProductByMaxPriceBrand();
+    public List<ResponseDtoMaxPrice> getProductByMaxPriceBrand() {
+        return analyticsDao.findProductByMaxPriceBrand();
     }
 
     @GetMapping("/9")
-    public List<ResponseEntityDto> findStoreAndAmountProductsOneBrand(@RequestParam("brand") String brand) {
-        return repository.findStoreAndAmountProductsOneBrand(brand);
+    public List<ResponseDto> getStoreAndAmountProductsOneBrand(@RequestParam("brand") String brand) {
+        return analyticsDao.findStoreAndAmountProductsOneBrand(brand);
     }
 
     @GetMapping("/10/{storeId}")
-    public List<ResponseEntityDtoSumCash> findClientAndCashByStore(@PathVariable Integer storeId) {
-        return repository.findClientAndCashByStore(storeId);
+    public List<ResponseDtoSumMoney> getClientAndAmountMoneyByStore(@PathVariable Integer storeId) {
+        return analyticsDao.findClientAndCashByStore(storeId);
     }
 
     @GetMapping("/11")
-    public List<ResponseEntityDtoSumCash> findStoreAndSumCashByBrand(@RequestParam("brand") String brand) {
-        return repository.findStoreAndSumCashByBrand(brand);
+    public List<ResponseDtoSumMoney> getStoreAndSumMoneyByBrand(@RequestParam("brand") String brand) {
+        return analyticsDao.findStoreAndSumCashByBrand(brand);
     }
 
 }

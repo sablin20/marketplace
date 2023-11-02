@@ -1,21 +1,20 @@
 package marketplace.analytics;
 
 import lombok.RequiredArgsConstructor;
-import marketplace.store.Store;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
-public class AnalyticsRepositorySqlImpl implements AnalyticsRepository {
+public class AnalyticsDaoSqlImpl implements AnalyticsDao {
 
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public List<ResponseEntityDto> findNameStoreAndAmountCategoryForSales() { // OK
+    public List<ResponseDto> findNameStoreAndAmountCategoryForSales() { // OK
 
         return jdbcTemplate.query("""
             SELECT s.name AS store_name, COUNT(p.category) AS amount_category
@@ -23,7 +22,7 @@ public class AnalyticsRepositorySqlImpl implements AnalyticsRepository {
             WHERE p.category IN(SELECT category FROM Product WHERE category NOT IN ('PC', 'TV'))
             GROUP BY s.name""",
             ((rs, rowNum) -> {
-                return ResponseEntityDto.builder()
+                return ResponseDto.builder()
                         .name(rs.getString("store_name"))
                         .amount(rs.getInt("amount_category"))
                         .build();
@@ -31,7 +30,7 @@ public class AnalyticsRepositorySqlImpl implements AnalyticsRepository {
     }
 
     @Override
-    public List<ResponseEntityDtoSumCash> findNameClientAndSumCashByBrand(String brand) { // OK
+    public List<ResponseDtoSumMoney> findNameClientAndSumCashByBrand(String brand) { // OK
 
         return jdbcTemplate.query("""
             SELECT DISTINCT c.name AS client_name, SUM(p.price) AS sum_cash
@@ -40,15 +39,15 @@ public class AnalyticsRepositorySqlImpl implements AnalyticsRepository {
             WHERE brand = ?
             GROUP BY c.name""",
             ((rs, rowNum) -> {
-                return ResponseEntityDtoSumCash.builder()
+                return ResponseDtoSumMoney.builder()
                         .name(rs.getString("client_name"))
-                        .sumCash(rs.getBigDecimal("sum_cash"))
+                        .sumMoney(rs.getBigDecimal("sum_cash"))
                         .build();
             }), brand);
     }
 
     @Override
-    public List<ResponseEntityDto> findNameStoreByMaxSalesByBrand(String brand) { //OK
+    public List<ResponseDto> findNameStoreByMaxSalesByBrand(String brand) { //OK
 
         return jdbcTemplate.query("""
             SELECT DISTINCT s.name AS store_name, MAX(ph.amount) AS max_amount_buy
@@ -60,7 +59,7 @@ public class AnalyticsRepositorySqlImpl implements AnalyticsRepository {
             GROUP BY s.name
             HAVING MAX(ph.amount) > COUNT(ph.amount);""",
             ((rs, rowNum) -> {
-                return ResponseEntityDto.builder()
+                return ResponseDto.builder()
                         .name(rs.getString("store_name"))
                         .amount(rs.getInt("max_amount_buy"))
                         .build();
@@ -68,7 +67,7 @@ public class AnalyticsRepositorySqlImpl implements AnalyticsRepository {
     }
 
     @Override
-    public ResponseEntityDto findNameClientAndCountIn3Category(Integer clientId) { //OK
+    public ResponseDto findNameClientAndCountIn3Category(Integer clientId) { //OK
 
         return jdbcTemplate.queryForObject("""
             SELECT c.name AS client_name, COUNT(ph.amount) AS amount_buy_product
@@ -79,7 +78,7 @@ public class AnalyticsRepositorySqlImpl implements AnalyticsRepository {
             GROUP BY c.name
             HAVING COUNT(DISTINCT category) >= 3;""",
             ((rs, rowNum) -> {
-                return ResponseEntityDto.builder()
+                return ResponseDto.builder()
                         .name(rs.getString("client_name"))
                         .amount(rs.getInt("amount_buy_product"))
                         .build();
@@ -87,23 +86,24 @@ public class AnalyticsRepositorySqlImpl implements AnalyticsRepository {
     }
 
     @Override
-    public List<ResponseEntityDto> findNameBrandAndAmountCategoryByPrice() { //OK
+    public List<ResponseDto> findNameBrandAndAmountCategoryByPrice(BigInteger priceLimit) { //OK
 
+        // сделать чтобы метод принимал переменную, и она вставлялась в запрос sql ************************************
         return jdbcTemplate.query("""
             SELECT brand, COUNT(DISTINCT category) AS amount_category
             FROM Product
-            WHERE price >= 5000
+            WHERE price >= ?
             GROUP BY brand;""",
             ((rs, rowNum) -> {
-                return ResponseEntityDto.builder()
+                return ResponseDto.builder()
                         .name(rs.getString("brand"))
                         .amount(rs.getInt("amount_category"))
                         .build();
-            }));
+            }), priceLimit);
     }
 
     @Override
-    public ResponseEntityDtoAvgPrice findAvgPriceByCategory(String category) { // OK
+    public ResponseDtoAvgPrice findAvgPriceByCategory(String category) { // OK
 
         return jdbcTemplate.queryForObject("""
             SELECT category, AVG(price) AS avg_price
@@ -111,7 +111,7 @@ public class AnalyticsRepositorySqlImpl implements AnalyticsRepository {
             WHERE category = ?
             GROUP BY category;""",
             ((rs, rowNum) -> {
-                return ResponseEntityDtoAvgPrice.builder()
+                return ResponseDtoAvgPrice.builder()
                         .name(rs.getString("category"))
                         .avgPrice(rs.getBigDecimal("avg_price"))
                         .build();
@@ -119,7 +119,7 @@ public class AnalyticsRepositorySqlImpl implements AnalyticsRepository {
     }
 
     @Override
-    public ResponseEntityDtoMaxPrice findCategoryAndMaxPrice(String category) { // OK
+    public ResponseDtoMaxPrice findCategoryAndMaxPrice(String category) { // OK
 
         return jdbcTemplate.queryForObject("""
             SELECT category, MAX(price) AS max_price
@@ -127,7 +127,7 @@ public class AnalyticsRepositorySqlImpl implements AnalyticsRepository {
             WHERE category = ?
             GROUP BY category;""",
             ((rs, rowNum) -> {
-                return ResponseEntityDtoMaxPrice.builder()
+                return ResponseDtoMaxPrice.builder()
                         .name(rs.getString("category"))
                         .maxPrice(rs.getBigDecimal("max_price"))
                         .build();
@@ -135,14 +135,14 @@ public class AnalyticsRepositorySqlImpl implements AnalyticsRepository {
     }
 
     @Override
-    public List<ResponseEntityDtoMaxPrice> findProductByMaxPriceBrand() { // OK
+    public List<ResponseDtoMaxPrice> findProductByMaxPriceBrand() { // OK
 
         return jdbcTemplate.query("""
             SELECT DISTINCT brand, MAX(price) AS max_price
             FROM Product
             GROUP BY brand;""",
             ((rs, rowNum) -> {
-                return ResponseEntityDtoMaxPrice.builder()
+                return ResponseDtoMaxPrice.builder()
                         .name(rs.getString("brand"))
                         .maxPrice(rs.getBigDecimal("max_price"))
                         .build();
@@ -150,7 +150,7 @@ public class AnalyticsRepositorySqlImpl implements AnalyticsRepository {
     }
 
     @Override
-    public List<ResponseEntityDto> findStoreAndAmountProductsOneBrand(String brand) { // OK
+    public List<ResponseDto> findStoreAndAmountProductsOneBrand(String brand) { // OK
 
         return jdbcTemplate.query("""
             SELECT s.name AS store_name, pa.amount AS amount_product
@@ -159,7 +159,7 @@ public class AnalyticsRepositorySqlImpl implements AnalyticsRepository {
             JOIN Product_amount pa on p.id = pa.product_id
             WHERE brand = ? AND pa.amount >= 3;""",
             ((rs, rowNum) -> {
-                return ResponseEntityDto.builder()
+                return ResponseDto.builder()
                         .name(rs.getString("store_name"))
                         .amount(rs.getInt("amount_product"))
                         .build();
@@ -167,7 +167,7 @@ public class AnalyticsRepositorySqlImpl implements AnalyticsRepository {
     }
 
     @Override
-    public List<ResponseEntityDtoSumCash> findClientAndCashByStore(Integer storeId) { // OK
+    public List<ResponseDtoSumMoney> findClientAndCashByStore(Integer storeId) { // OK
 
         return jdbcTemplate.query("""
             SELECT c.name AS client_name, SUM(p.price) AS sum_cash
@@ -177,15 +177,15 @@ public class AnalyticsRepositorySqlImpl implements AnalyticsRepository {
             WHERE store_id = ?
             GROUP BY c.name;""",
             ((rs, rowNum) -> {
-                return ResponseEntityDtoSumCash.builder()
+                return ResponseDtoSumMoney.builder()
                         .name(rs.getString("client_name"))
-                        .sumCash(rs.getBigDecimal("sum_cash"))
+                        .sumMoney(rs.getBigDecimal("sum_cash"))
                         .build();
             }), storeId);
     }
 
     @Override
-    public List<ResponseEntityDtoSumCash> findStoreAndSumCashByBrand(String brand) { //OK
+    public List<ResponseDtoSumMoney> findStoreAndSumCashByBrand(String brand) { //OK
         return jdbcTemplate.query("""
             SELECT s.name AS store_name, SUM(p.price) AS sum_cash
             FROM Purchase_history ph
@@ -193,9 +193,9 @@ public class AnalyticsRepositorySqlImpl implements AnalyticsRepository {
                 JOIN Store s ON p.store_id = s.id
             WHERE p.brand = ?
             GROUP BY s.name;""", ((rs, rowNum) -> {
-            return ResponseEntityDtoSumCash.builder()
+            return ResponseDtoSumMoney.builder()
                 .name(rs.getString("store_name"))
-                .sumCash(rs.getBigDecimal("sum_cash"))
+                .sumMoney(rs.getBigDecimal("sum_cash"))
                 .build();
             }), brand);
     }

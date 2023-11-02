@@ -306,35 +306,6 @@ public class ProductRepositoryStreamImpl implements ProductRepository {
     @Override
     public List<ProductDto> findProducts(String category, String name, String brand, String sortedName, String sortedPrice, BigDecimal priceFirst, BigDecimal priceLast) {
 
-//        if (category != null && name != null && brand != null) {
-//            return findByCategoryAndNameAndBrand(category, name, brand, sortedName, sortedPrice);
-//        }
-//
-//        if (category != null && brand != null) {
-//            return findByCategoryAndBrand(category, brand, sortedName, sortedPrice);
-//        }
-//
-//        if (category != null && name != null) {
-//            return findByCategoryAndName(category, name, sortedName, sortedPrice);
-//        }
-//
-//        if (brand != null && name != null) {
-//            return findByBrandAndName (brand, name, sortedName, sortedPrice);
-//        }
-//
-//        if (brand != null) {
-//            return findByBrand(brand, sortedName, sortedPrice);
-//        }
-//
-//        if (name != null) {
-//            return findByName(name, sortedName, sortedPrice);
-//        }
-//
-//        if (category != null) {
-//            return findByCategory(category, sortedName, sortedPrice);
-//        }
-//
-//        return requestSql();
         return null;
     }
 }
