@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -289,7 +290,7 @@ public class ProductRepositoryStreamImpl implements ProductRepository {
         if (price.equals("ASC")) {
             return requestSql().stream().
                     filter(p -> p.getBrand().matches(brand) && p.getName().matches(name)).
-                    sorted((p, p1) -> p.getPrice().compareTo(p1.getPrice())).
+                    sorted(Comparator.comparing(Product::getPrice)).
                     toList();
         }
 

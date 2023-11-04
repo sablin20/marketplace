@@ -5,7 +5,7 @@ import lombok.Value;
 
 @Value
 @Builder
-public class ResponseDto {
+public class AnalyticsDto {
     String name;
     Integer amount;
 }
