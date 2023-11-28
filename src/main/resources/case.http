@@ -35,10 +35,10 @@ Content-Type: application/json
 DELETE http://localhost:8888/product/1
 
 ### get product by id
-GET http://localhost:8888/product/?id=2
+GET http://localhost:8888/product/?id=77
 
 ### get products by params
-GET http://localhost:8888/product/findProducts?brand=LG&category=TV&sortedPrice=DESC
+GET http://localhost:8888/product/findProducts?category=TV&sortedPrice=DESC
 
 ### buy product
 POST http://localhost:8888/product/buy?id=10&clientId=1&productId=4&amount=2

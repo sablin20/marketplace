@@ -61,34 +61,34 @@ Content-Type: application/json
 *************************** Analytics **********************************************************
 
 ### 1
-GET http://localhost:8888/analytics/1
+GET http://localhost:8888/analytics/nameStoreAndAmountCategory
 
 ### 2
-GET http://localhost:8888/analytics/2?brand=LG
+GET http://localhost:8888/analytics/nameClientAndMoneySpentOnBrand?brand=LG
 
 ### 3
-GET http://localhost:8888/analytics/3?brand=Apple
+GET http://localhost:8888/analytics/storeByMaxSoldBrand?brand=Apple
 
 ### 4
-GET http://localhost:8888/analytics/4/4
+GET http://localhost:8888/analytics/nameClientAndNumberOfPurchases/4
 
 ### 5
-GET http://localhost:8888/analytics/5
+GET http://localhost:8888/analytics/brandAndAmountCategory?priceLimit=5000
 
 ### 6
-GET http://localhost:8888/analytics/6?category=TV
+GET http://localhost:8888/analytics/avgPriceByCategory?category=TV
 
 ### 7
-GET http://localhost:8888/analytics/7?category=TV
+GET http://localhost:8888/analytics/categoryAndMaxPrice?category=TV
 
 ### 8
-GET http://localhost:8888/analytics/8
+GET http://localhost:8888/analytics/productMaxPriceBrand
 
 ### 9
-GET http://localhost:8888/analytics/9?brand=Apple
+GET http://localhost:8888/analytics/storeAndAmountProductsOneBrand?brand=Apple
 
 ### 10
-GET http://localhost:8888/analytics/10/4
+GET http://localhost:8888/analytics/clientAndAmountMoneyByStore/4
 
 ### 11
-GET http://localhost:8888/analytics/11?brand=LG
+GET http://localhost:8888/analytics/storeAndSumMoneyByBrand?brand=LG
