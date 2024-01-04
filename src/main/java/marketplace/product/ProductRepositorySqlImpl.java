@@ -7,14 +7,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @Primary для того чтобы не было неоднозначности при запуске и внедрении зависимости т.к.
  * Два бина(ProductRepositorySqlImpl и ProductRepositoryStreamImpl) яв-ся кандидатами на внедрение,
  * дальше сделаем с помощью .property
  */
-@Primary
+//@Primary
 @Repository
 @RequiredArgsConstructor
 public class ProductRepositorySqlImpl implements ProductRepository {
@@ -78,7 +77,7 @@ public class ProductRepositorySqlImpl implements ProductRepository {
                         amountResult - amount, productId);
             }
 
-            String amountStr = switch (amountResult) {
+            var amountStr = switch (amountResult) {
                 case 0 -> "Not available";
                 case 1, 2, 3 -> String.format("There are few of this product left. Congratulations on your purchase %d %s!", amount, rs.getString("product_name"));
                 case 4, 5, 6, 7 -> String.format("This product is enough. Congratulations on your purchase %d %s!", amount, rs.getString("product_name"));
@@ -152,7 +151,7 @@ public class ProductRepositorySqlImpl implements ProductRepository {
 
         return jdbcTemplate.query(resultSql, (rs, rowNum) -> {
             int amountResult = rs.getInt("amount");
-            String amountStr = switch (amountResult) {
+            var amountStr = switch (amountResult) {
                 case 0 -> "Not available";
                 case 1, 2, 3 -> "There are few of this product left";
                 case 4, 5, 6, 7 -> "This product is enough";
@@ -178,7 +177,4 @@ public class ProductRepositorySqlImpl implements ProductRepository {
         }
         return condition;
     }
-
-
-
 }

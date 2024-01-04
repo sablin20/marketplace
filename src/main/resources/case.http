@@ -35,10 +35,10 @@ Content-Type: application/json
 DELETE http://localhost:8888/product/1
 
 ### get product by id
-GET http://localhost:8888/product/?id=2
+GET http://localhost:8888/product/?id=77
 
 ### get products by params
-GET http://localhost:8888/product/findProducts?brand=LG&category=TV&sortedPrice=DESC
+GET http://localhost:8888/product/findProducts?category=TV&sortedPrice=DESC
 
 ### buy product
 POST http://localhost:8888/product/buy?id=10&clientId=1&productId=4&amount=2
@@ -56,3 +56,39 @@ Content-Type: application/json
   "id": 9,
   "name": "Amazon"
 }
+
+### Analytics
+*************************** Analytics **********************************************************
+
+### 1
+GET http://localhost:8888/analytics/nameStoreAndAmountCategory
+
+### 2
+GET http://localhost:8888/analytics/nameClientAndMoneySpentOnBrand?brand=LG
+
+### 3
+GET http://localhost:8888/analytics/storeByMaxSoldBrand?brand=Apple
+
+### 4
+GET http://localhost:8888/analytics/nameClientAndNumberOfPurchases/4
+
+### 5
+GET http://localhost:8888/analytics/brandAndAmountCategory?priceLimit=5000
+
+### 6
+GET http://localhost:8888/analytics/avgPriceByCategory?category=TV
+
+### 7
+GET http://localhost:8888/analytics/categoryAndMaxPrice?category=TV
+
+### 8
+GET http://localhost:8888/analytics/productMaxPriceBrand
+
+### 9
+GET http://localhost:8888/analytics/storeAndAmountProductsOneBrand?brand=Apple
+
+### 10
+GET http://localhost:8888/analytics/clientAndAmountMoneyByStore/4
+
+### 11
+GET http://localhost:8888/analytics/storeAndSumMoneyByBrand?brand=LG
