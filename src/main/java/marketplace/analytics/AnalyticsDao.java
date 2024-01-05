@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public interface AnalyticsDao {
+interface AnalyticsDao {
 
     //нужно получить всех продавцов(имя) и
     // количество категорий товаров которыми они барыжат

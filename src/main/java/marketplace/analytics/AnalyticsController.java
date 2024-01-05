@@ -12,58 +12,59 @@ public class AnalyticsController {
 
     private final AnalyticsDao analyticsDao;
 
-    @GetMapping("/nameStoreAndAmountCategory")
+    @GetMapping("/1")
     public List<AnalyticsDto> getNameStoreAndAmountCategory() {
         return analyticsDao.findNameStoreAndAmountCategoryForSales();
     }
 
-    @GetMapping("/nameClientAndMoneySpentOnBrand")
+    @GetMapping("/2")
     public List<AnalyticsDtoSumMoney> getNameClientAndMoneySpentOnBrand(@RequestParam("brand") String brand) {
         return analyticsDao.findNameClientAndSumCashByBrand(brand);
     }
 
-    @GetMapping("/storeByMaxSoldBrand")
+    @GetMapping("/3")
     public List<AnalyticsDto> getNameStoreByMaxSoldBrand(@RequestParam("brand") String brand) {
         return analyticsDao.findNameStoreByMaxSalesByBrand(brand);
     }
 
-    @GetMapping("/nameClientAndNumberOfPurchases/{clientId}")
+    @GetMapping("/4/{clientId}")
     public AnalyticsDto getNameClientAndNumberOfPurchases(@PathVariable Integer clientId) {
         return analyticsDao.findNameClientAndCountIn3Category(clientId);
     }
 
-    @GetMapping("/brandAndAmountCategory")
+    @GetMapping("/5")
     public List<AnalyticsDto> getBrandAndAmountCategory(@RequestParam("priceLimit") BigInteger priceLimit) {
         return analyticsDao.findNameBrandAndAmountCategoryByPrice(priceLimit);
     }
 
-    @GetMapping("/avgPriceByCategory")
+    @GetMapping("/6")
     public AnalyticsDtoAvgPrice getAvgPriceByCategory(@RequestParam("category") String category) {
         return analyticsDao.findAvgPriceByCategory(category);
     }
 
-    @GetMapping("/categoryAndMaxPrice")
+    @GetMapping("/7")
     public AnalyticsDtoMaxPrice getCategoryAndMaxPrice(@RequestParam("category") String category) {
         return analyticsDao.findCategoryAndMaxPrice(category);
     }
 
-    @GetMapping("/productMaxPriceBrand")
+    @GetMapping("/8")
     public List<AnalyticsDtoMaxPrice> getProductByMaxPriceBrand() {
         return analyticsDao.findProductByMaxPriceBrand();
     }
 
-    @GetMapping("/storeAndAmountProductsOneBrand")
+    @GetMapping("/9")
     public List<AnalyticsDto> getStoreAndAmountProductsOneBrand(@RequestParam("brand") String brand) {
         return analyticsDao.findStoreAndAmountProductsOneBrand(brand);
     }
 
-    @GetMapping("/clientAndAmountMoneyByStore/{storeId}")
+    @GetMapping("/10/{storeId}")
     public List<AnalyticsDtoSumMoney> getClientAndAmountMoneyByStore(@PathVariable Integer storeId) {
         return analyticsDao.findClientAndCashByStore(storeId);
     }
 
-    @GetMapping("/storeAndSumMoneyByBrand")
+    @GetMapping("/11")
     public List<AnalyticsDtoSumMoney> getStoreAndSumMoneyByBrand(@RequestParam("brand") String brand) {
         return analyticsDao.findStoreAndSumCashByBrand(brand);
     }
+
 }
