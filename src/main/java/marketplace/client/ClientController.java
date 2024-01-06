@@ -16,7 +16,7 @@ public class ClientController {
     }
 
     @DeleteMapping("/{id}")
-    public void remove(@PathVariable Integer id) {
+    public void remove(@PathVariable("id") Integer id) {
         clientRepository.removeById(id);
     }
 

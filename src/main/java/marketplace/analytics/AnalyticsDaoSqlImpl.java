@@ -3,6 +3,8 @@ package marketplace.analytics;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +16,7 @@ public class AnalyticsDaoSqlImpl implements AnalyticsDao {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public List<AnalyticsDto> findNameStoreAndAmountCategoryForSales() { // OK
+    public List<AnalyticsDto> findNameStoreAndAmountCategoryForSales() {
 
         return jdbcTemplate.query("""
             SELECT s.name AS store_name, COUNT(p.category) AS amount_category
@@ -30,7 +32,7 @@ public class AnalyticsDaoSqlImpl implements AnalyticsDao {
     }
 
     @Override
-    public List<AnalyticsDtoSumMoney> findNameClientAndSumCashByBrand(String brand) { // OK
+    public List<AnalyticsDtoSumMoney> findNameClientAndSumCashByBrand(String brand) {
 
         return jdbcTemplate.query("""
             SELECT DISTINCT c.name AS client_name, SUM(p.price) AS sum_cash
@@ -47,7 +49,7 @@ public class AnalyticsDaoSqlImpl implements AnalyticsDao {
     }
 
     @Override
-    public List<AnalyticsDto> findNameStoreByMaxSalesByBrand(String brand) { //OK
+    public List<AnalyticsDto> findNameStoreByMaxSalesByBrand(String brand) {
 
         return jdbcTemplate.query("""
             SELECT DISTINCT s.name AS store_name, MAX(ph.amount) AS max_amount_buy
@@ -67,7 +69,7 @@ public class AnalyticsDaoSqlImpl implements AnalyticsDao {
     }
 
     @Override
-    public AnalyticsDto findNameClientAndCountIn3Category(Integer clientId) { //OK
+    public AnalyticsDto findNameClientAndCountIn3Category(Integer clientId) {
 
         return jdbcTemplate.queryForObject("""
             SELECT c.name AS client_name, COUNT(ph.amount) AS amount_buy_product
@@ -86,9 +88,8 @@ public class AnalyticsDaoSqlImpl implements AnalyticsDao {
     }
 
     @Override
-    public List<AnalyticsDto> findNameBrandAndAmountCategoryByPrice(BigInteger priceLimit) { //OK
+    public List<AnalyticsDto> findNameBrandAndAmountCategoryByPrice(BigDecimal priceLimit) {
 
-        // сделать чтобы метод принимал переменную, и она вставлялась в запрос sql ************************************
         return jdbcTemplate.query("""
             SELECT brand, COUNT(DISTINCT category) AS amount_category
             FROM Product
@@ -103,7 +104,7 @@ public class AnalyticsDaoSqlImpl implements AnalyticsDao {
     }
 
     @Override
-    public AnalyticsDtoAvgPrice findAvgPriceByCategory(String category) { // OK
+    public AnalyticsDtoAvgPrice findAvgPriceByCategory(String category) {
 
         return jdbcTemplate.queryForObject("""
             SELECT category, AVG(price) AS avg_price
@@ -119,7 +120,7 @@ public class AnalyticsDaoSqlImpl implements AnalyticsDao {
     }
 
     @Override
-    public AnalyticsDtoMaxPrice findCategoryAndMaxPrice(String category) { // OK
+    public AnalyticsDtoMaxPrice findCategoryAndMaxPrice(String category) {
 
         return jdbcTemplate.queryForObject("""
             SELECT category, MAX(price) AS max_price
@@ -135,7 +136,7 @@ public class AnalyticsDaoSqlImpl implements AnalyticsDao {
     }
 
     @Override
-    public List<AnalyticsDtoMaxPrice> findProductByMaxPriceBrand() { // OK
+    public List<AnalyticsDtoMaxPrice> findProductByMaxPriceBrand() {
 
         return jdbcTemplate.query("""
             SELECT DISTINCT brand, MAX(price) AS max_price
@@ -150,7 +151,7 @@ public class AnalyticsDaoSqlImpl implements AnalyticsDao {
     }
 
     @Override
-    public List<AnalyticsDto> findStoreAndAmountProductsOneBrand(String brand) { // OK
+    public List<AnalyticsDto> findStoreAndAmountProductsOneBrand(String brand) {
 
         return jdbcTemplate.query("""
             SELECT s.name AS store_name, pa.amount AS amount_product
@@ -167,7 +168,7 @@ public class AnalyticsDaoSqlImpl implements AnalyticsDao {
     }
 
     @Override
-    public List<AnalyticsDtoSumMoney> findClientAndCashByStore(Integer storeId) { // OK
+    public List<AnalyticsDtoSumMoney> findClientAndCashByStore(Integer storeId) {
 
         return jdbcTemplate.query("""
             SELECT c.name AS client_name, SUM(p.price) AS sum_cash
@@ -185,7 +186,7 @@ public class AnalyticsDaoSqlImpl implements AnalyticsDao {
     }
 
     @Override
-    public List<AnalyticsDtoSumMoney> findStoreAndSumCashByBrand(String brand) { //OK
+    public List<AnalyticsDtoSumMoney> findStoreAndSumCashByBrand(String brand) {
         return jdbcTemplate.query("""
             SELECT s.name AS store_name, SUM(p.price) AS sum_cash
             FROM Purchase_history ph

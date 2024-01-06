@@ -19,7 +19,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public void removeById(@PathVariable Integer id) {
+    public void removeById(@PathVariable("id") Integer id) {
         repository.removeById(id);
     }
 

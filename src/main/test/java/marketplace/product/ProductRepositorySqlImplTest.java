@@ -38,6 +38,5 @@ class ProductRepositorySqlImplTest {
                 .brand("LG")
                 .build());
 
-
     }
 }

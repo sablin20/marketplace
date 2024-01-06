@@ -1,6 +1,8 @@
 package marketplace.analytics;
 
 import org.springframework.stereotype.Repository;
+
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +31,7 @@ interface AnalyticsDao {
     AnalyticsDto findNameClientAndCountIn3Category(Integer clientId);
 
     //показать все бренды и колчичество категорий в котрых они представлены при учете что цена у товара должна быть не менее 5000
-    List<AnalyticsDto> findNameBrandAndAmountCategoryByPrice(BigInteger priceLimit);
+    List<AnalyticsDto> findNameBrandAndAmountCategoryByPrice(BigDecimal priceLimit);
 
     //показать все показать среднюю цену товара для категории (категорию передать надо)
     AnalyticsDtoAvgPrice findAvgPriceByCategory(String category);
