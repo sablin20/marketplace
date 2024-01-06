@@ -17,6 +17,12 @@ public class ProductRepositoryStreamImpl implements ProductRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
+    private final static String SELECT_PRODUCT_SQL = """
+            SELECT pa.amount, p.id, p.name, p.category, p.price, p.brand, s.name AS store_name
+            FROM Product_amount pa JOIN Product p ON pa.product_id = p.id
+            JOIN Store s ON s.id = p.store_id
+            """;
+
     /**
      * @return специальный метод, который возвращает список товаров, по нему будем искать подходящие товары с помощью Stream API
      */
@@ -76,6 +82,7 @@ public class ProductRepositoryStreamImpl implements ProductRepository {
                                          String sortedPrice,
                                          BigDecimal priceFirst,
                                          BigDecimal priceLast) {
+
         var products = jdbcTemplate.query(SELECT_PRODUCT_SQL, (rs, rowNum) -> {
             int amountResult = rs.getInt("amount");
             var amountStr = switch (amountResult) {

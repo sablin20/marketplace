@@ -14,7 +14,7 @@ import java.util.List;
  * Два бина(ProductRepositorySqlImpl и ProductRepositoryStreamImpl) яв-ся кандидатами на внедрение,
  * дальше сделаем с помощью .property
  */
-//@Primary
+@Primary
 @Repository
 @RequiredArgsConstructor
 public class ProductRepositorySqlImpl implements ProductRepository {
