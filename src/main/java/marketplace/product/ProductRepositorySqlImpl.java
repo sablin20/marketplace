@@ -14,7 +14,7 @@ import java.util.List;
  * Два бина(ProductRepositorySqlImpl и ProductRepositoryStreamImpl) яв-ся кандидатами на внедрение,
  * дальше сделаем с помощью .property
  */
-@Primary
+//@Primary
 @Repository
 @RequiredArgsConstructor
 public class ProductRepositorySqlImpl implements ProductRepository {
@@ -60,7 +60,10 @@ public class ProductRepositorySqlImpl implements ProductRepository {
     }
 
     @Override
-    public ProductDto buyProduct(Integer id, Integer clientId, Integer productId, Integer amount) {
+    public ProductDto buyProduct(Integer id,
+                                 Integer clientId,
+                                 Integer productId,
+                                 Integer amount) {
 
         // запрашиваем данные по продукту
         var productDTO = jdbcTemplate.queryForObject("""

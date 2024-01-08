@@ -38,7 +38,7 @@ DELETE http://localhost:8888/product/1
 GET http://localhost:8888/product/?id=77
 
 ### get products by params
-GET http://localhost:8888/product/findProducts?brand=Apple
+GET http://localhost:8888/product/findProducts?brand=LG&priceFirst=50000&priceLast=70000
 
 ### buy product
 POST http://localhost:8888/product/buy?id=10&clientId=1&productId=4&amount=2
@@ -76,7 +76,7 @@ GET http://localhost:8888/analytics/nameClientAndNumberOfPurchases/4
 GET http://localhost:8888/analytics/brandAndAmountCategory?priceLimit=5000
 
 ### 6
-GET http://localhost:8888/analytics/avgPriceByCategory?category=TV
+GET http://localhost:8888/analytics/avgPriceByCategory?category=Smartphone
 
 ### 7
 GET http://localhost:8888/analytics/categoryAndMaxPrice?category=TV

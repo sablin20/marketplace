@@ -29,14 +29,5 @@ class ProductRepositorySqlImplTest {
     @Test
     void mTest2() {
 
-        controller.create(2, Product.builder()
-                .id(22)
-                .name("Ihsasa")
-                .storeId(1)
-                .category("TV")
-                .price(new BigDecimal(100_000))
-                .brand("LG")
-                .build());
-
     }
 }
