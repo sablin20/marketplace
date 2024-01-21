@@ -7,14 +7,14 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+
 import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
-//@Sql({"schema.sql", "test-data.sql"})
 @SpringBootTest
-//@ExtendWith(MockitoExtension.class)
 class ProductRepositorySqlImplTest {
 
     @Mock
