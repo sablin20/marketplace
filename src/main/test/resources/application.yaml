@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:h2:~/test
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  sql:
+    init:
+      mode: embedded # настраивает создание схемы БД, если используется встроенная бд
+server:
+  port: 9092
+
+db:
+  stream-api:
+    enabled: true
