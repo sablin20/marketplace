@@ -1,89 +1,95 @@
 package ru.sablin.app.marketplace.product;
 
-import org.junit.jupiter.api.BeforeEach;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 import java.math.BigDecimal;
 import java.util.List;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
+@WebMvcTest(controllers = ProductController.class)
+@AutoConfigureMockMvc(addFilters = false)
 @ExtendWith(MockitoExtension.class)
 class ProductControllerTest {
 
-    @Mock
+    @MockBean
     ProductRepository repository;
 
-    @InjectMocks
-    ProductController controller;
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    @Autowired
+    MockMvc mockMvc;
 
-    @Mock
-    Product productMock;
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    @Autowired
+    ObjectMapper objectMapper;
 
-    @BeforeEach
-    void m(){
-        productMock = new Product();
+    Product productMock(){
+        var productMock = new Product();
         productMock.setId(1);
         productMock.setBrand("Apple");
         productMock.setCategory("Smartphone");
         productMock.setName("Iphone15");
         productMock.setStoreId(4);
         productMock.setPrice(new BigDecimal(100_000));
+        return productMock;
     }
 
     @Test
-    void create_() {
-        controller.create(1, productMock);
+    void create_() throws Exception {
+        mockMvc.perform(post("/product/create")
+                        .param("amount", "1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(productMock())))
+                .andExpect(status().isOk());
 
-        verify(repository).create(1, productMock);
+        verify(repository, times(1)).create(1, productMock());
     }
 
     @Test
-    void removeById() {
-        controller.removeById(productMock.getId());
+    void removeById() throws Exception {
+        mockMvc.perform(delete("/product/{id}", 1))
+                .andExpect(status().isOk());
 
-        assertNull(controller.getById(productMock.getId()));
-        verify(repository).removeById(productMock.getId());
+        verify(repository, times(1)).removeById(1);
     }
 
     @Test
-    void getById_returnProductById_isExist() {
-        when(repository.findById(1)).thenReturn(productMock);
+    void getById_returnProductById_isExist() throws Exception {
+        when(repository.findById(1)).thenReturn(productMock());
 
-        var result = controller.getById(1);
+        mockMvc.perform(get("/product/")
+                        .param("id", "1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.name").value("Iphone15"))
+                .andExpect(jsonPath("$.brand").value("Apple"))
+                .andExpect(jsonPath("$.category").value("Smartphone"))
+                .andExpect(jsonPath("$.price").value(BigDecimal.valueOf(100_000)))
+                .andExpect(jsonPath("$.storeId").value(4));
 
-        assertNotNull(result);
-        assertEquals(result.getStoreId(), productMock.getStoreId());
-        assertEquals(result, productMock);
-        verify(repository).findById(1);
+        verify(repository, times(1)).findById(1);
     }
 
     @Test
-    void getProducts_returnProductsByParams_isExist() {
-        var productList = List.of(
-                ProductDto.builder()
+    void getProducts_returnProductsByParams_isExist() throws Exception {
+        var productDtoExpected = ProductDto.builder()
                 .id(11)
                 .brand("Apple")
                 .category("Smartphone")
                 .name("Iphone11")
                 .storeName("OZON")
                 .price(new BigDecimal(55_000))
-                .build(),
-
-                ProductDto.builder()
-                .id(1)
-                .brand("Apple")
-                .category("Smartphone")
-                .name("Iphone15")
-                .storeName("AppStore")
-                .price(new BigDecimal(100_000))
-                .build());
+                .build();
 
         when(repository.findProducts("Smartphone",
                 null,
@@ -91,49 +97,60 @@ class ProductControllerTest {
                 null,
                 null,
                 null,
-                null)).thenReturn(productList);
+                null)).thenReturn(List.of(productDtoExpected));
 
-        var result = controller.getProducts("Smartphone",
-                null,
-                null,
-                null,
-                null,
-                null,
-                null);
+        mockMvc.perform(get("/product/findProducts")
+                        .param("category", "Smartphone"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[0].name").value(productDtoExpected.getName()))
+                .andExpect(jsonPath("$.[0].category").value(productDtoExpected.getCategory()))
+                .andExpect(jsonPath("$.[0].price").value(productDtoExpected.getPrice()))
+                .andExpect(jsonPath("$.[0].brand").value(productDtoExpected.getBrand()));
 
-        assertNotNull(result);
-        assertEquals(result, productList);
+        verify(repository, times(1)).findProducts("Smartphone",
+                                                                null,
+                                                                null,
+                                                                null,
+                                                                null,
+                                                                null,
+                                                                null);
     }
 
     @Test
-    void updateProducts() {
-        controller.updateProducts(4, productMock);
+    void updateProducts() throws Exception {
+        mockMvc.perform(put("/product/")
+                        .param("storeId", "4")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(productMock())))
+                .andExpect(status().isOk());
 
-        verify(repository).updateProducts(4, productMock);
+        verify(repository, times(1)).updateProducts(4, productMock());
     }
 
     @Test
-    void buyProduct() {
+    void buyProduct() throws Exception {
         var productDto = ProductDto.builder()
-                .id(productMock.getId())
-                .category(productMock.getCategory())
-                .brand(productMock.getBrand())
-                .name(productMock.getName())
-                .price(productMock.getPrice())
+                .id(productMock().getId())
+                .category(productMock().getCategory())
+                .brand(productMock().getBrand())
+                .name(productMock().getName())
+                .price(productMock().getPrice())
                 .storeName("DNS")
                 .build();
-        when(repository.buyProduct(1,2,productMock.getId(),2)).thenReturn(productDto);
 
-        var result = controller.buyProduct(1,2, 1, 2);
+        when(repository.buyProduct(18, 77, productMock().getId(), 2)).thenReturn(productDto);
 
-        assertEquals(result.getPrice(), productDto.getPrice());
-        assertEquals(result.getName(), productDto.getName());
-        assertEquals(result.getBrand(), productDto.getBrand());
-        assertEquals(result.getCategory(), productDto.getCategory());
-        assertEquals(result.getAmount(), productDto.getAmount());
-        assertEquals(result.getId(), productDto.getId());
-        assertEquals(result.getStoreName(), productDto.getStoreName());
-        assertEquals(result, productDto);
-        verify(repository).buyProduct(1,2,1,2);
+        mockMvc.perform(post("/product/buy")
+                        .param("id", "18")
+                        .param("clientId", "77")
+                        .param("productId", "1")
+                        .param("amount", "2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value(productDto.getName()))
+                .andExpect(jsonPath("$.price").value(productDto.getPrice()))
+                .andExpect(jsonPath("$.brand").value(productDto.getBrand()))
+                .andExpect(jsonPath("$.category").value(productDto.getCategory()));
+
+        verify(repository, times(1)).buyProduct(18, 77, productMock().getId(), 2);
     }
 }

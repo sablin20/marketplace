@@ -7,9 +7,10 @@ spring:
   sql:
     init:
       mode: embedded # настраивает создание схемы БД, если используется встроенная бд
+
 server:
   port: 9092
 
 db:
   stream-api:
-    enabled: true
+    enabled: false

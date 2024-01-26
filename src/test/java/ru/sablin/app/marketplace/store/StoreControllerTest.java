@@ -1,52 +1,67 @@
 package ru.sablin.app.marketplace.store;
 
-import org.junit.jupiter.api.BeforeEach;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@WebMvcTest(controllers = StoreController.class)
+@AutoConfigureMockMvc(addFilters = false)
 @ExtendWith(MockitoExtension.class)
 class StoreControllerTest {
 
-    @Mock
+    @MockBean
     private StoreRepository repository;
 
-    @InjectMocks
-    private StoreController controller;
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    @Autowired
+    MockMvc mockMvc;
 
-    @Mock
-    private Store storeMock;
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    @Autowired
+    ObjectMapper objectMapper;
 
-    @BeforeEach
-    void factoryStore() {
-        storeMock = new Store();
-        storeMock.setId(1);
-        storeMock.setName("DNS");
+    @Test
+    void getById() throws Exception {
+        var storeInDb = new Store();
+        storeInDb.setId(1);
+        storeInDb.setName("DNS");
+
+        when(repository.findById(1)).thenReturn(storeInDb);
+
+        mockMvc.perform(get("/store/")
+                        .param("id", "1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(storeInDb));
+
+        verify(repository, times(1)).findById(storeInDb.getId());
     }
 
     @Test
-    void getById() {
-        when(repository.findById(storeMock.getId())).thenReturn(storeMock);
+    void create() throws Exception {
+        var store = new Store();
+        store.setId(77);
+        store.setName("Amazon");
 
-        var result = controller.getById(storeMock.getId());
+        when(repository.create(store)).thenReturn(store);
 
-        assertEquals(result.getName(), storeMock.getName());
-        assertEquals(result, storeMock);
-        verify(repository).findById(storeMock.getId());
-    }
+        mockMvc.perform(post("/store/create")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(store)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(store));
 
-    @Test
-    void create() {
-        when(repository.create(storeMock)).thenReturn(storeMock);
-
-        var result = controller.create(storeMock);
-
-        assertEquals(result, storeMock);
-        verify(repository).create(storeMock);
+        verify(repository, times(1)).create(store);
     }
 }

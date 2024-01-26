@@ -1,19 +1,14 @@
 package ru.sablin.app.marketplace.product;
 
 import lombok.RequiredArgsConstructor;
-import ru.sablin.app.marketplace.customexception.ProductNotFoundException;
-import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
-
+import ru.sablin.app.marketplace.customexception.ProductNotFoundException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-//@Primary
-//@Repository
 @RequiredArgsConstructor
 public class ProductRepositoryStreamImpl implements ProductRepository {
 

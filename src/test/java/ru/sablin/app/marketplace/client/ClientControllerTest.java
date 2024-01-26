@@ -1,64 +1,75 @@
 package ru.sablin.app.marketplace.client;
 
-import org.junit.jupiter.api.BeforeEach;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
+@AutoConfigureMockMvc(addFilters = false)
+@WebMvcTest(controllers = ClientController.class)
 class ClientControllerTest {
 
-    @Mock
+    @MockBean
     ClientRepository repository;
 
-    @InjectMocks
-    private ClientController controller;
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    @Autowired
+    MockMvc mockMvc;
 
-    @Mock
-    Client clientMock;
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    @Autowired
+    ObjectMapper objectMapper;
 
-    @BeforeEach
-    void factoryClient() {
-        clientMock = new Client();
-        clientMock.setId(1);
+    Client factoryClient() {
+        var clientMock = new Client();
+        clientMock.setId(87);
         clientMock.setName("John");
         clientMock.setLastName("Smith");
+        return clientMock;
     }
 
     @Test
-    void create() {
-        when(repository.create(clientMock)).thenReturn(clientMock);
+    void create() throws Exception {
+        when(repository.create(factoryClient())).thenReturn(factoryClient());
 
-        var result = controller.create(clientMock);
+        mockMvc.perform(post("/client/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(factoryClient())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(factoryClient()));
 
-        assertEquals(result, clientMock);
-        verify(repository).create(clientMock);
+        verify(repository).create(factoryClient());
     }
 
     @Test
-    void remove() {
-        controller.remove(clientMock.getId());
+    void remove() throws Exception {
+        mockMvc.perform(delete("/client/{id}", factoryClient().getId()))
+                        .andExpect(status().isOk());
 
-        assertNull(controller.getById(clientMock.getId()));
-        verify(repository).removeById(clientMock.getId());
+        verify(repository, times(1)).removeById(factoryClient().getId());
     }
 
     @Test
-    void getById() {
-        when(repository.findById(clientMock.getId())).thenReturn(clientMock);
+    void getById() throws Exception {
+        when(repository.findById(factoryClient().getId())).thenReturn(factoryClient());
 
-        var result = controller.getById(clientMock.getId());
+        mockMvc.perform(get("/client/")
+                        .param("id", "87"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(factoryClient()));
 
-        assertEquals(result.getName(), clientMock.getName());
-        assertEquals(result.getLastName(), clientMock.getLastName());
-        assertEquals(result, clientMock);
-        verify(repository).findById(clientMock.getId());
+        verify(repository, times(1)).findById(factoryClient().getId());
     }
 }
