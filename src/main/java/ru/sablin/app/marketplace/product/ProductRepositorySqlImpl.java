@@ -1,8 +1,11 @@
 package ru.sablin.app.marketplace.product;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import ru.sablin.app.marketplace.exception.ProductNotFoundException;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -100,8 +103,12 @@ public class ProductRepositorySqlImpl implements ProductRepository {
 
     @Override
     public Product findById(Integer id) {
-        return jdbcTemplate.queryForObject("SELECT * FROM Product WHERE id = ?",
-                new BeanPropertyRowMapper<>(Product.class), id);
+        try {
+            return jdbcTemplate.queryForObject("SELECT * FROM Product WHERE id = ?",
+                    new BeanPropertyRowMapper<>(Product.class), id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ProductNotFoundException(String.format("No Product by id = %s", id));
+        }
     }
 
     @Override

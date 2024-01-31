@@ -33,7 +33,7 @@ class ProductControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    Product productMock(){
+    Product created_product(){
         var productMock = new Product();
         productMock.setId(1);
         productMock.setBrand("Apple");
@@ -49,10 +49,10 @@ class ProductControllerTest {
         mockMvc.perform(post("/product/create")
                         .param("amount", "1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(productMock())))
+                        .content(objectMapper.writeValueAsString(created_product())))
                 .andExpect(status().isOk());
 
-        verify(repository, times(1)).create(1, productMock());
+        verify(repository, times(1)).create(1, created_product());
     }
 
     @Test
@@ -65,7 +65,7 @@ class ProductControllerTest {
 
     @Test
     void getById_returnProductById_isExist() throws Exception {
-        when(repository.findById(1)).thenReturn(productMock());
+        when(repository.findById(1)).thenReturn(created_product());
 
         mockMvc.perform(get("/product/")
                         .param("id", "1"))
@@ -121,24 +121,24 @@ class ProductControllerTest {
         mockMvc.perform(put("/product/")
                         .param("storeId", "4")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(productMock())))
+                        .content(objectMapper.writeValueAsString(created_product())))
                 .andExpect(status().isOk());
 
-        verify(repository, times(1)).updateProducts(4, productMock());
+        verify(repository, times(1)).updateProducts(4, created_product());
     }
 
     @Test
     void buyProduct() throws Exception {
         var productDto = ProductDto.builder()
-                .id(productMock().getId())
-                .category(productMock().getCategory())
-                .brand(productMock().getBrand())
-                .name(productMock().getName())
-                .price(productMock().getPrice())
+                .id(created_product().getId())
+                .category(created_product().getCategory())
+                .brand(created_product().getBrand())
+                .name(created_product().getName())
+                .price(created_product().getPrice())
                 .storeName("DNS")
                 .build();
 
-        when(repository.buyProduct(18, 77, productMock().getId(), 2)).thenReturn(productDto);
+        when(repository.buyProduct(18, 77, created_product().getId(), 2)).thenReturn(productDto);
 
         mockMvc.perform(post("/product/buy")
                         .param("id", "18")
@@ -151,6 +151,6 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$.brand").value(productDto.getBrand()))
                 .andExpect(jsonPath("$.category").value(productDto.getCategory()));
 
-        verify(repository, times(1)).buyProduct(18, 77, productMock().getId(), 2);
+        verify(repository, times(1)).buyProduct(18, 77, created_product().getId(), 2);
     }
 }

@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.sablin.app.marketplace.exception.ClientNotFoundException;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -32,7 +34,7 @@ class ClientControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    Client factoryClient() {
+    Client created_client() {
         var clientMock = new Client();
         clientMock.setId(87);
         clientMock.setName("John");
@@ -42,34 +44,34 @@ class ClientControllerTest {
 
     @Test
     void create() throws Exception {
-        when(repository.create(factoryClient())).thenReturn(factoryClient());
+        when(repository.create(created_client())).thenReturn(created_client());
 
         mockMvc.perform(post("/client/create")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(factoryClient())))
+                        .content(objectMapper.writeValueAsString(created_client())))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").value(factoryClient()));
+                .andExpect(jsonPath("$").value(created_client()));
 
-        verify(repository).create(factoryClient());
+        verify(repository).create(created_client());
     }
 
     @Test
     void remove() throws Exception {
-        mockMvc.perform(delete("/client/{id}", factoryClient().getId()))
+        mockMvc.perform(delete("/client/{id}", created_client().getId()))
                         .andExpect(status().isOk());
 
-        verify(repository, times(1)).removeById(factoryClient().getId());
+        verify(repository, times(1)).removeById(created_client().getId());
     }
 
     @Test
     void getById() throws Exception {
-        when(repository.findById(factoryClient().getId())).thenReturn(factoryClient());
+        when(repository.findById(created_client().getId())).thenReturn(created_client());
 
         mockMvc.perform(get("/client/")
                         .param("id", "87"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").value(factoryClient()));
+                .andExpect(jsonPath("$").value(created_client()));
 
-        verify(repository, times(1)).findById(factoryClient().getId());
+        verify(repository, times(1)).findById(created_client().getId());
     }
 }

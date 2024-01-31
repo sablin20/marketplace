@@ -3,7 +3,7 @@ package ru.sablin.app.marketplace.product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import ru.sablin.app.marketplace.customexception.ProductNotFoundException;
+import ru.sablin.app.marketplace.exception.ProductNotFoundException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;

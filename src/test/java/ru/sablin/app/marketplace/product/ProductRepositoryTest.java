@@ -17,7 +17,7 @@ class ProductRepositoryTest {
     @Autowired
     ProductRepository repository;
 
-    Product factoryProduct() {
+    Product created_product() {
         var product = new Product();
         product.setId(32);
         product.setBrand("Apple");
@@ -51,12 +51,12 @@ class ProductRepositoryTest {
 
     @Test
     void create() {
-        repository.create(2, factoryProduct());
+        repository.create(2, created_product());
 
-        var product_expected = repository.findById(factoryProduct().getId());
+        var product_expected = repository.findById(created_product().getId());
 
         assertNotNull(product_expected);
-        assertEquals(product_expected, factoryProduct());
+        assertEquals(product_expected, created_product());
     }
 
     @Test
@@ -69,7 +69,7 @@ class ProductRepositoryTest {
         assertEquals(buy_product.getName(), "Iphone8");
         assertEquals(buy_product.getBrand(), "Apple");
         assertEquals(buy_product.getPrice(), BigDecimal.valueOf(10_000));
-        assertEquals(buy_product.getAmount(), String.format("There are few of this product left. Congratulations on your purchase %d %buy_product!", amount, nameProduct));
+        assertEquals(buy_product.getAmount(), String.format("There are few of this product left. Congratulations on your purchase %d %s!", amount, nameProduct));
 
     }
 

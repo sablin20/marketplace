@@ -3,16 +3,9 @@ package ru.sablin.app.marketplace.client;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
-import ru.sablin.app.marketplace.product.ProductRepository;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @SpringBootTest
@@ -23,7 +16,7 @@ class ClientRepositoryTest {
     @Autowired
     ClientRepositorySqlImpl repository;
 
-    Client factoryClient() {
+    Client created_client() {
         var client = new Client();
         client.setId(11);
         client.setName("John");
@@ -33,12 +26,12 @@ class ClientRepositoryTest {
 
     @Test
     void create() {
-        repository.create(factoryClient());
+        repository.create(created_client());
 
-        var expected_client = repository.findById(factoryClient().getId());
+        var expected_client = repository.findById(created_client().getId());
 
         assertNotNull(expected_client);
-        assertEquals(expected_client, factoryClient());
+        assertEquals(expected_client, created_client());
     }
 
     @Test

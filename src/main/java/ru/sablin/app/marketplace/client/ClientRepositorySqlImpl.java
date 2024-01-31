@@ -1,9 +1,11 @@
 package ru.sablin.app.marketplace.client;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import ru.sablin.app.marketplace.exception.ClientNotFoundException;
 
 @Repository
 @RequiredArgsConstructor
@@ -23,7 +25,12 @@ public class ClientRepositorySqlImpl implements ClientRepository {
 
     @Override
     public Client findById(Integer id) {
-        return jdbcTemplate.queryForObject("SELECT * FROM Client WHERE id = ?", new BeanPropertyRowMapper<>(Client.class), id);
+        try {
+            return jdbcTemplate.queryForObject("SELECT * FROM Client WHERE id = ?",
+                    new BeanPropertyRowMapper<>(Client.class), id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ClientNotFoundException(String.format("No Client by id = %s", id));
+        }
     }
 
     @Override

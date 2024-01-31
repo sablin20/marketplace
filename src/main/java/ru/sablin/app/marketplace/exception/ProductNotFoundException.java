@@ -1,4 +1,4 @@
-package ru.sablin.app.marketplace.customexception;
+package ru.sablin.app.marketplace.exception;
 
 public class ProductNotFoundException extends RuntimeException {
 

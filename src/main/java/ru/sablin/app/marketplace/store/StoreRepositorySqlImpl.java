@@ -1,9 +1,11 @@
 package ru.sablin.app.marketplace.store;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import ru.sablin.app.marketplace.exception.StoreNotFoundException;
 
 @RequiredArgsConstructor
 @Repository
@@ -23,7 +25,11 @@ public class StoreRepositorySqlImpl implements StoreRepository {
 
     @Override
     public Store findById(Integer id) {
-        return jdbcTemplate.queryForObject("SELECT * FROM Store WHERE id = ?",
-                new BeanPropertyRowMapper<>(Store.class), id);
+        try {
+            return jdbcTemplate.queryForObject("SELECT * FROM Store WHERE id = ?",
+                    new BeanPropertyRowMapper<>(Store.class), id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new StoreNotFoundException(String.format("No Store by id = %s", id));
+        }
     }
 }
