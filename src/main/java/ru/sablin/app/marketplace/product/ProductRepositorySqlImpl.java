@@ -107,7 +107,7 @@ public class ProductRepositorySqlImpl implements ProductRepository {
             return jdbcTemplate.queryForObject("SELECT * FROM Product WHERE id = ?",
                     new BeanPropertyRowMapper<>(Product.class), id);
         } catch (EmptyResultDataAccessException e) {
-            throw new ProductNotFoundException(String.format("No Product by id = %s", id));
+            throw new ProductNotFoundException(String.format("Product with id = %d not found", id));
         }
     }
 

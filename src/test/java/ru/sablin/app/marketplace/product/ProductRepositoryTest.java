@@ -17,7 +17,7 @@ class ProductRepositoryTest {
     @Autowired
     ProductRepository repository;
 
-    Product created_product() {
+    Product createdProduct() {
         var product = new Product();
         product.setId(32);
         product.setBrand("Apple");
@@ -51,12 +51,12 @@ class ProductRepositoryTest {
 
     @Test
     void create() {
-        repository.create(2, created_product());
+        repository.create(2, createdProduct());
 
-        var product_expected = repository.findById(created_product().getId());
+        var productExpected = repository.findById(createdProduct().getId());
 
-        assertNotNull(product_expected);
-        assertEquals(product_expected, created_product());
+        assertNotNull(productExpected);
+        assertEquals(productExpected, createdProduct());
     }
 
     @Test
@@ -64,12 +64,12 @@ class ProductRepositoryTest {
         var nameProduct = "Iphone8";
         var amount = 1;
 
-        var buy_product = repository.buyProduct(111, 1, 1, amount);
+        var buyProduct = repository.buyProduct(111, 1, 1, amount);
 
-        assertEquals(buy_product.getName(), "Iphone8");
-        assertEquals(buy_product.getBrand(), "Apple");
-        assertEquals(buy_product.getPrice(), BigDecimal.valueOf(10_000));
-        assertEquals(buy_product.getAmount(), String.format("There are few of this product left. Congratulations on your purchase %d %s!", amount, nameProduct));
+        assertEquals(buyProduct.getName(), "Iphone8");
+        assertEquals(buyProduct.getBrand(), "Apple");
+        assertEquals(buyProduct.getPrice(), BigDecimal.valueOf(10_000));
+        assertEquals(buyProduct.getAmount(), String.format("There are few of this product left. Congratulations on your purchase %d %s!", amount, nameProduct));
 
     }
 
@@ -137,12 +137,12 @@ class ProductRepositoryTest {
                         .build()
         );
 
-        var expected_list_products = repository.findProducts(
+        var expectedListProducts = repository.findProducts(
                 "TV",null,null,null,null,null,null
         );
 
-        assertNotNull(expected_list_products);
-        assertEquals(expected_list_products.size(), 2);
-        assertEquals(expected_list_products, productList);
+        assertNotNull(expectedListProducts);
+        assertEquals(expectedListProducts.size(), 2);
+        assertEquals(expectedListProducts, productList);
     }
 }

@@ -48,7 +48,7 @@ public class ProductRepositoryStreamImpl implements ProductRepository {
         var product = requestSql().stream()
                 .filter(p -> p.getId().equals(id))
                 .findFirst()
-                .orElseThrow(() -> new ProductNotFoundException(String.format("No Product by id = %s", id)));
+                .orElseThrow(() -> new ProductNotFoundException(String.format("Product with id = %d not found", id)));
         jdbcTemplate.update("DELETE FROM Product WHERE id = ?", product.getId());
     }
 
@@ -57,7 +57,7 @@ public class ProductRepositoryStreamImpl implements ProductRepository {
         return requestSql().stream()
                 .filter(p -> p.getId().equals(id))
                 .findFirst()
-                .orElseThrow(() -> new ProductNotFoundException(String.format("No Product by id = %s", id)));
+                .orElseThrow(() -> new ProductNotFoundException(String.format("Product with id = %d not found", id)));
     }
 
     @Override

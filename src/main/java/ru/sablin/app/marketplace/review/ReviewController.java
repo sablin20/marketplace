@@ -2,7 +2,6 @@ package ru.sablin.app.marketplace.review;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -18,7 +17,7 @@ public class ReviewController {
     }
 
     @GetMapping("/")
-    public List<String> getAvgRatingLast10ReviewAndTop3WordBeforeProduct() {
-        return reviewService.getAvgRatingLast10ReviewAndTop3WordBeforeProduct();
+    public List<String> getAvgRatingLast10ReviewAndTop3WordBeforeProduct(@RequestParam("storeName") String storeName) {
+        return reviewService.getAvgRatingLast10ReviewAndTop3WordBeforeProduct(storeName);
     }
 }

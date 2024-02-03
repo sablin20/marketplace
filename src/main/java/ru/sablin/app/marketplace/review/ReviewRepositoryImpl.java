@@ -18,7 +18,7 @@ public class ReviewRepositoryImpl implements ReviewRepository {
         jdbcTemplate.update("insert into Review values (?, ?, ?, ?, ?)",
                 review.getId(),
                 review.getClientName(),
-                review.getStoreId(),
+                review.getStoreName(),
                 review.getMessage(),
                 review.getRating());
 
@@ -27,7 +27,8 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     }
 
     @Override
-    public List<Review> find10LastReview() {
-        return jdbcTemplate.query("select * from Review limit 10", new BeanPropertyRowMapper<>(Review.class));
+    public List<Review> find10LastReview(String storeName) {
+        return jdbcTemplate.query("select * from Review where store_name = ? limit 10",
+                new BeanPropertyRowMapper<>(Review.class), storeName);
     }
 }

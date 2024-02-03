@@ -16,7 +16,7 @@ class ClientRepositoryTest {
     @Autowired
     ClientRepositorySqlImpl repository;
 
-    Client created_client() {
+    Client createdClient() {
         var client = new Client();
         client.setId(11);
         client.setName("John");
@@ -26,12 +26,12 @@ class ClientRepositoryTest {
 
     @Test
     void create() {
-        repository.create(created_client());
+        repository.create(createdClient());
 
-        var expected_client = repository.findById(created_client().getId());
+        var expectedClient = repository.findById(createdClient().getId());
 
-        assertNotNull(expected_client);
-        assertEquals(expected_client, created_client());
+        assertNotNull(expectedClient);
+        assertEquals(expectedClient, createdClient());
     }
 
     @Test

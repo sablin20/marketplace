@@ -29,7 +29,7 @@ public class ClientRepositorySqlImpl implements ClientRepository {
             return jdbcTemplate.queryForObject("SELECT * FROM Client WHERE id = ?",
                     new BeanPropertyRowMapper<>(Client.class), id);
         } catch (EmptyResultDataAccessException e) {
-            throw new ClientNotFoundException(String.format("No Client by id = %s", id));
+            throw new ClientNotFoundException(String.format("Client with id = %d not found", id));
         }
     }
 

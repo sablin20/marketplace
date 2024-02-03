@@ -25,9 +25,9 @@ class ReviewServiceTest {
     @Test
     void leaveFeedback() {
         var review = new Review();
-        review.setId(20);
+        review.setId(99);
         review.setClientName("Sem");
-        review.setStoreId(2);
+        review.setStoreName("DNS");
         review.setMessage("некачественный товар не советую");
         review.setRating(0);
 
@@ -39,87 +39,43 @@ class ReviewServiceTest {
         assertEquals(result, review);
     }
 
+    Review createReview(Integer id,
+                        String clientName,
+                        String storeName,
+                        String message,
+                        Integer rating) {
+
+        var review = new Review();
+        review.setId(id);
+        review.setClientName(clientName);
+        review.setStoreName(storeName);
+        review.setMessage(message);
+        review.setRating(rating);
+        return review;
+    }
+
     @Test
     void getAvgRatingLast10ReviewAndTop3WordBeforeProduct() {
-        var review1 = new Review();
-        review1.setId(1);
-        review1.setClientName("Alex");
-        review1.setStoreId(1);
-        review1.setMessage("крутой товар");
-        review1.setRating(5);
+        var listReview = List.of(
+                createReview(1,"Sem", "DNS", "крутой товар", 5),
+                createReview(2,"Alex", "DNS", "крутой товар", 5),
+                createReview(3,"Jack", "DNS", "крутой товар", 5),
+                createReview(4,"Feel", "DNS", "крутой товар", 5),
+                createReview(5,"Don", "DNS", "крутой товар", 5),
+                createReview(6,"Leo", "DNS", "лучший товар", 5),
+                createReview(7,"Smith", "DNS", "лучший товар", 5),
+                createReview(8,"Den", "DNS", "лучший товар", 5),
+                createReview(9,"Petr", "DNS", "плохой товар", 5),
+                createReview(10,"Zak", "DNS", "плохой товар", 5));
 
-        var review2 = new Review();
-        review2.setId(2);
-        review2.setClientName("Alex");
-        review2.setStoreId(1);
-        review2.setMessage("крутой товар");
-        review2.setRating(5);
-
-        var review3 = new Review();
-        review3.setId(3);
-        review3.setClientName("Alex");
-        review3.setStoreId(1);
-        review3.setMessage("крутой товар");
-        review3.setRating(5);
-
-        var review4 = new Review();
-        review4.setId(4);
-        review4.setClientName("Alex");
-        review4.setStoreId(1);
-        review4.setMessage("крутой товар");
-        review4.setRating(5);
-
-        var review5 = new Review();
-        review5.setId(5);
-        review5.setClientName("Alex");
-        review5.setStoreId(1);
-        review5.setMessage("крутой товар");
-        review5.setRating(5);
-
-        var review6 = new Review();
-        review6.setId(6);
-        review6.setClientName("Alex");
-        review6.setStoreId(1);
-        review6.setMessage("лучший товар");
-        review6.setRating(5);
-
-        var review7 = new Review();
-        review7.setId(7);
-        review7.setClientName("Alex");
-        review7.setStoreId(1);
-        review7.setMessage("лучший товар");
-        review7.setRating(5);
-
-        var review8 = new Review();
-        review8.setId(8);
-        review8.setClientName("Alex");
-        review8.setStoreId(1);
-        review8.setMessage("лучший товар");
-        review8.setRating(5);
-
-        var review9 = new Review();
-        review9.setId(9);
-        review9.setClientName("Alex");
-        review9.setStoreId(1);
-        review9.setMessage("плохой товар");
-        review9.setRating(5);
-
-        var review10 = new Review();
-        review10.setId(10);
-        review10.setClientName("Alex");
-        review10.setStoreId(1);
-        review10.setMessage("плохой товар");
-        review10.setRating(5);
-
-        var listReview = List.of(review1,review2,review3,review4,review5,review6,review7,review8,review9,review10);
-        var avgRating = "Average rating last 10 review = 5";
+        var avgRating = "StoreName = DNS : average rating last 10 review = 5";
         var top_1 = "Top_1 word before {товар}: крутой=5";
         var top_2 = "Top_2 word before {товар}: лучший=3";
         var top_3 = "Top_3 word before {товар}: плохой=2";
 
-        when(repository.find10LastReview()).thenReturn(listReview);
+        when(repository.find10LastReview("DNS")).thenReturn(listReview);
 
-        var result = service.getAvgRatingLast10ReviewAndTop3WordBeforeProduct();
+        var result = service.getAvgRatingLast10ReviewAndTop3WordBeforeProduct("DNS");
 
         assertNotNull(result);
         assertTrue(result.contains(avgRating));

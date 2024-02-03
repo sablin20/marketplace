@@ -75,16 +75,16 @@ POST http://localhost:8888/review/
 Content-Type: application/json
 
 {
-  "id": 22,
+  "id": 99,
   "clientName": "Black",
-  "storeId": 4,
-  "message": "Плохой товар, никогда не покупайте",
+  "storeName": "DNS",
+  "message": "Плохой товар никогда не покупайте",
   "rating": 1
 }
 
 
 ### get last 10 review and avg rating, get top 3 word before товар
-GET http://localhost:8888/review/
+GET http://localhost:8888/review/?storeName=OZON
 
 
 ### Analytics

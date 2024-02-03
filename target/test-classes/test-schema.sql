@@ -33,7 +33,7 @@ CREATE TABLE Product_amount (
 CREATE TABLE Review (
     id INTEGER NOT NULL PRIMARY KEY,
     client_name VARCHAR(20) NOT NULL,
-    store_id INTEGER NOT NULL,
+    store_name VARCHAR(30) NOT NULL,
     message VARCHAR(50) NOT NULL,
     rating INTEGER NOT NULL
 );

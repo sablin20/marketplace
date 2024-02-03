@@ -6,7 +6,7 @@ import lombok.Data;
 public class Review {
     private Integer id;
     private String clientName;
-    private Integer storeId;
+    private String storeName;
     private String message;
     private Integer rating;
 }

@@ -21,21 +21,21 @@ class StoreRepositoryTest {
         store.setId(22);
         store.setName("Amazon");
 
-        var expected_store = repository.create(store);
+        var expectedStore = repository.create(store);
 
-        assertNotNull(expected_store);
-        assertEquals(expected_store, store);
+        assertNotNull(expectedStore);
+        assertEquals(expectedStore, store);
     }
 
     @Test
     void findById() {
-        var expected_store = new Store();
-        expected_store.setId(1);
-        expected_store.setName("DNS");
+        var expectedStore = new Store();
+        expectedStore.setId(1);
+        expectedStore.setName("DNS");
 
-        var result = repository.findById(expected_store.getId());
+        var result = repository.findById(expectedStore.getId());
 
         assertNotNull(result);
-        assertEquals(result, expected_store);
+        assertEquals(result, expectedStore);
     }
 }

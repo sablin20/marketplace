@@ -19,23 +19,23 @@ class ReviewRepositoryTest {
     @Test
     void leaveFeedback() {
         var review = new Review();
-        review.setId(22);
+        review.setId(88);
         review.setClientName("Sem");
-        review.setStoreId(2);
-        review.setMessage("некачественный товар, не советую");
+        review.setStoreName("DNS");
+        review.setMessage("некачественный товар не советую");
         review.setRating(0);
 
-        var expected_review = repository.leaveFeedback(review);
+        var expectedReview = repository.leaveFeedback(review);
 
-        assertNotNull(expected_review);
-        assertEquals(expected_review, review);
+        assertNotNull(expectedReview);
+        assertEquals(expectedReview, review);
     }
 
     @Test
     void find10LastReview() {
-        var expected_list = repository.find10LastReview();
+        var expectedList = repository.find10LastReview("DNS");
 
-        assertNotNull(expected_list);
-        assertEquals(expected_list.size(), 10);
+        assertNotNull(expectedList);
+        assertEquals(expectedList.size(), 10);
     }
 }

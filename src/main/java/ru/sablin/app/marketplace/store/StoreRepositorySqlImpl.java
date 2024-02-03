@@ -29,7 +29,7 @@ public class StoreRepositorySqlImpl implements StoreRepository {
             return jdbcTemplate.queryForObject("SELECT * FROM Store WHERE id = ?",
                     new BeanPropertyRowMapper<>(Store.class), id);
         } catch (EmptyResultDataAccessException e) {
-            throw new StoreNotFoundException(String.format("No Store by id = %s", id));
+            throw new StoreNotFoundException(String.format("Store with id = %d not found", id));
         }
     }
 }

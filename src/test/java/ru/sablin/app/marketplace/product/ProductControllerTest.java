@@ -64,7 +64,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void getById_returnProductById_isExist() throws Exception {
+    void getByIdReturnProductByIdIsExist() throws Exception {
         when(repository.findById(1)).thenReturn(created_product());
 
         mockMvc.perform(get("/product/")
@@ -81,7 +81,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void getProducts_returnProductsByParams_isExist() throws Exception {
+    void getProductsReturnProductsByParamsIsExist() throws Exception {
         var productDtoExpected = ProductDto.builder()
                 .id(11)
                 .brand("Apple")

@@ -44,8 +44,8 @@ class ReviewControllerTest {
         var review = new Review();
         review.setId(1);
         review.setClientName("Sem");
-        review.setStoreId(2);
-        review.setMessage("некачественный товар, не советую");
+        review.setStoreName("DNS");
+        review.setMessage("некачественный товар не советую");
         review.setRating(0);
 
         when(service.leaveFeedback(review)).thenReturn(review);
@@ -61,7 +61,8 @@ class ReviewControllerTest {
 
     @Test
     void getAvgRatingLast10ReviewAndTop3WordBeforeProduct() throws Exception {
-        mockMvc.perform(get("/review/"))
+        mockMvc.perform(get("/review/")
+                        .param("storeName", "DNS"))
                 .andExpect(status().isOk());
     }
 }
