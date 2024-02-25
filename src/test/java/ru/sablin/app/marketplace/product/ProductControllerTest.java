@@ -46,7 +46,7 @@ class ProductControllerTest {
 
     @Test
     void create_() throws Exception {
-        mockMvc.perform(post("/product/create")
+        mockMvc.perform(post("/products/create")
                         .param("amount", "1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(created_product())))
@@ -57,7 +57,7 @@ class ProductControllerTest {
 
     @Test
     void removeById() throws Exception {
-        mockMvc.perform(delete("/product/{id}", 1))
+        mockMvc.perform(delete("/products/{id}", 1))
                 .andExpect(status().isOk());
 
         verify(repository, times(1)).removeById(1);
@@ -67,7 +67,7 @@ class ProductControllerTest {
     void getByIdReturnProductByIdIsExist() throws Exception {
         when(repository.findById(1)).thenReturn(created_product());
 
-        mockMvc.perform(get("/product/")
+        mockMvc.perform(get("/products/")
                         .param("id", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
@@ -99,7 +99,7 @@ class ProductControllerTest {
                 null,
                 null)).thenReturn(List.of(productDtoExpected));
 
-        mockMvc.perform(get("/product/findProducts")
+        mockMvc.perform(get("/products/findProducts")
                         .param("category", "Smartphone"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].name").value(productDtoExpected.getName()))
@@ -118,7 +118,7 @@ class ProductControllerTest {
 
     @Test
     void updateProducts() throws Exception {
-        mockMvc.perform(put("/product/")
+        mockMvc.perform(put("/products/")
                         .param("storeId", "4")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(created_product())))
@@ -140,7 +140,7 @@ class ProductControllerTest {
 
         when(repository.buyProduct(18, 77, created_product().getId(), 2)).thenReturn(productDto);
 
-        mockMvc.perform(post("/product/buy")
+        mockMvc.perform(post("/products/buy")
                         .param("id", "18")
                         .param("clientId", "77")
                         .param("productId", "1")

@@ -50,7 +50,7 @@ class ReviewControllerTest {
 
         when(service.leaveFeedback(review)).thenReturn(review);
 
-        mockMvc.perform(post("/review/")
+        mockMvc.perform(post("/reviews/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(review)))
                 .andExpect(status().isOk())
@@ -61,7 +61,7 @@ class ReviewControllerTest {
 
     @Test
     void getAvgRatingLast10ReviewAndTop3WordBeforeProduct() throws Exception {
-        mockMvc.perform(get("/review/")
+        mockMvc.perform(get("/reviews/")
                         .param("storeName", "DNS"))
                 .andExpect(status().isOk());
     }

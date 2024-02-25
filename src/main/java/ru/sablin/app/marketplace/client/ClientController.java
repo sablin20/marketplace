@@ -5,12 +5,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/client")
+@RequestMapping("/clients")
 public class ClientController {
 
     private final ClientRepository clientRepository;
 
-    @PostMapping("/create")
+    @PostMapping("/")
     public Client create(@RequestBody Client client) {
         return clientRepository.create(client);
     }

@@ -7,7 +7,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/product")
+@RequestMapping("/products")
 public class ProductController {
 
     private final ProductRepository repository;
@@ -45,7 +45,7 @@ public class ProductController {
         repository.updateProducts(storeId, product);
     }
 
-    @PostMapping("/buy")
+    @GetMapping("/buy")
     public ProductDto buyProduct(@RequestParam("id") Integer id,
                                  @RequestParam("clientId") Integer clientId,
                                  @RequestParam("productId") Integer productId,

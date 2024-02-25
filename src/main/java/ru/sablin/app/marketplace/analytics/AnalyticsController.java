@@ -18,7 +18,7 @@ public class AnalyticsController {
     }
 
     @GetMapping("/nameClientAndMoneySpentOnBrand")
-    public List<AnalyticsDtoSumMoney> getNameClientAndMoneySpentOnBrand(@RequestParam("brand") String brand) {
+    public List<AnalyticsSumMoneyDto> getNameClientAndMoneySpentOnBrand(@RequestParam("brand") String brand) {
         return analyticsDao.findNameClientAndSumCashByBrand(brand);
     }
 
@@ -38,17 +38,17 @@ public class AnalyticsController {
     }
 
     @GetMapping("/avgPriceByCategory")
-    public AnalyticsDtoAvgPrice getAvgPriceByCategory(@RequestParam("category") String category) {
+    public AnalyticsAvgPriceDto getAvgPriceByCategory(@RequestParam("category") String category) {
         return analyticsDao.findAvgPriceByCategory(category);
     }
 
     @GetMapping("/categoryAndMaxPrice")
-    public AnalyticsDtoMaxPrice getCategoryAndMaxPrice(@RequestParam("category") String category) {
+    public AnalyticsMaxPriceDto getCategoryAndMaxPrice(@RequestParam("category") String category) {
         return analyticsDao.findCategoryAndMaxPrice(category);
     }
 
     @GetMapping("/productMaxPriceBrand")
-    public List<AnalyticsDtoMaxPrice> getProductByMaxPriceBrand() {
+    public List<AnalyticsMaxPriceDto> getProductByMaxPriceBrand() {
         return analyticsDao.findProductByMaxPriceBrand();
     }
 
@@ -58,13 +58,12 @@ public class AnalyticsController {
     }
 
     @GetMapping("/clientAndAmountMoneyByStore/{storeId}")
-    public List<AnalyticsDtoSumMoney> getClientAndAmountMoneyByStore(@PathVariable("storeId") Integer storeId) {
+    public List<AnalyticsSumMoneyDto> getClientAndAmountMoneyByStore(@PathVariable("storeId") Integer storeId) {
         return analyticsDao.findClientAndCashByStore(storeId);
     }
 
     @GetMapping("/storeAndSumMoneyByBrand")
-    public List<AnalyticsDtoSumMoney> getStoreAndSumMoneyByBrand(@RequestParam("brand") String brand) {
+    public List<AnalyticsSumMoneyDto> getStoreAndSumMoneyByBrand(@RequestParam("brand") String brand) {
         return analyticsDao.findStoreAndSumCashByBrand(brand);
     }
-
 }

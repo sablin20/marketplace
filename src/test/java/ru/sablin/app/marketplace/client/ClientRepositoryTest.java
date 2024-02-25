@@ -3,7 +3,10 @@ package ru.sablin.app.marketplace.client;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
+import ru.sablin.app.marketplace.exception.ClientNotFoundException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
@@ -42,9 +45,10 @@ class ClientRepositoryTest {
         assertEquals(result.getLastName(), "Smith");
     }
 
-//    @Test
-//    void removeById() {
-//        repository.removeById(1);
-//
-//    }
+    @Test
+    void removeById() {
+        repository.removeById(1);
+
+        assertThrows(ClientNotFoundException.class, () -> { repository.findById(1); });
+    }
 }

@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 @Value
 @Builder
-public class AnalyticsDtoAvgPrice {
+public class AnalyticsSumMoneyDto {
     String name;
-    BigDecimal avgPrice;
+    BigDecimal sumMoney;
 }

@@ -20,9 +20,6 @@ public class ProductRepositoryStreamImpl implements ProductRepository {
             JOIN Store s ON s.id = p.store_id
             """;
 
-    /**
-     * @return специальный метод, который возвращает список товаров, по нему будем искать подходящие товары с помощью Stream API
-     */
     public List<Product> requestSql() {
 
         return jdbcTemplate.query("SELECT * FROM Product", new BeanPropertyRowMapper<>(Product.class));
@@ -30,7 +27,6 @@ public class ProductRepositoryStreamImpl implements ProductRepository {
 
     @Override
     public void create(Integer amount, Product product) {
-        System.out.println("================ STREAM***********************");
         jdbcTemplate.update("INSERT INTO Product VALUES (?,?,?,?,?,?)",
                 product.getId(),
                 product.getName(),
@@ -89,7 +85,7 @@ public class ProductRepositoryStreamImpl implements ProductRepository {
                 default -> String.format("There is a lot of this product in stock. Congratulations on your purchase %d %s!", amount, rs.getString("product_name"));
             };
 
-            // формируем productDto который вернём клиенты после покупки
+            // формируем productDto который вернём клиенту после покупки
             return ProductDto.builder()
                     .id(rs.getInt("product_id"))
                     .name(rs.getString("product_name"))
@@ -139,7 +135,7 @@ public class ProductRepositoryStreamImpl implements ProductRepository {
 
         var products = jdbcTemplate.query(SELECT_PRODUCT_SQL, (rs, rowNum) -> {
             int amountResult = rs.getInt("amount");
-            var amountStr = switch (amountResult) {
+            var availability = switch (amountResult) {
                 case 0 -> "Not available";
                 case 1, 2, 3 -> "There are few of this product left";
                 case 4, 5, 6, 7 -> "This product is enough";
@@ -152,7 +148,7 @@ public class ProductRepositoryStreamImpl implements ProductRepository {
                     .brand(rs.getString("brand"))
                     .price(rs.getBigDecimal("price"))
                     .storeName(rs.getString("store_name"))
-                    .amount(amountStr)
+                    .amount(availability)
                     .build();
         });
 

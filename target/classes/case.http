@@ -1,25 +1,25 @@
 ************* CLIENT *************************************************************************************************************
 
 ### create Client
-POST http://localhost:8888/client/create
+POST http://localhost:8888/clients/
 Content-Type: application/json
 
 {
-  "id": 8,
+  "id": 88,
   "name": "Sem",
   "lastName": "Qwerty"
 }
 
 ### delete client by id
-DELETE http://localhost:8888/client/1
+DELETE http://localhost:8888/clients/1
 
 ### find Client by id
-GET http://localhost:8888/client/?id=100
+GET http://localhost:8888/clients/?id=100
 
 ********************* PRODUCT **************************************************************************************************
 
 ### create product
-POST http://localhost:8888/product/create?amount=22
+POST http://localhost:8888/products/create?amount=22
 Content-Type: application/json
 
 {
@@ -32,16 +32,16 @@ Content-Type: application/json
 }
 
 ### delete product by id
-DELETE http://localhost:8888/product/1
+DELETE http://localhost:8888/products/1
 
 ### get product by id
-GET http://localhost:8888/product/?id=100
+GET http://localhost:8888/products/?id=77
 
 ### get products by params
-GET http://localhost:8888/product/findProducts?brand=LG&priceFirst=50000&priceLast=70000
+GET http://localhost:8888/products/findProducts?brand=LG&priceFirst=50000&priceLast=70000
 
 ### buy product
-POST http://localhost:8888/product/buy?id=10&clientId=1&productId=4&amount=2
+GET http://localhost:8888/products/buy?id=10&clientId=1&productId=4&amount=2
 
 ******************* STORE ***************************************************************************************************
 

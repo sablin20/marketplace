@@ -44,7 +44,7 @@ class ClientControllerTest {
     void create() throws Exception {
         when(repository.create(createdClient())).thenReturn(createdClient());
 
-        mockMvc.perform(post("/client/create")
+        mockMvc.perform(post("/clients/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createdClient())))
                 .andExpect(status().isOk())

@@ -6,7 +6,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/review")
+@RequestMapping("/reviews")
 public class ReviewController {
 
     private final ReviewService reviewService;

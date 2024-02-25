@@ -41,7 +41,6 @@ public class ProductRepositorySqlImpl implements ProductRepository {
 
     @Override
     public void create(Integer amount, Product product) {
-        System.out.println("================ SQL ***********************");
         jdbcTemplate.update("INSERT INTO Product VALUES (?,?,?,?,?,?)",
                 product.getId(),
                 product.getName(),
@@ -75,7 +74,7 @@ public class ProductRepositorySqlImpl implements ProductRepository {
                         amountResult - amount, productId);
             }
 
-            var amountStr = switch (amountResult) {
+            var availability = switch (amountResult) {
                 case 0 -> "Not available";
                 case 1, 2, 3 -> String.format("There are few of this product left. Congratulations on your purchase %d %s!", amount, rs.getString("product_name"));
                 case 4, 5, 6, 7 -> String.format("This product is enough. Congratulations on your purchase %d %s!", amount, rs.getString("product_name"));
@@ -90,7 +89,7 @@ public class ProductRepositorySqlImpl implements ProductRepository {
                     .brand(rs.getString("brand"))
                     .price(rs.getBigDecimal("price"))
                     .storeName(rs.getString("store_name"))
-                    .amount(amountStr)
+                    .amount(availability)
                     .build();
         }, productId);
 
@@ -117,7 +116,13 @@ public class ProductRepositorySqlImpl implements ProductRepository {
     }
 
     @Override
-    public List<ProductDto> findProducts(String category, String name, String brand, String sortedName, String sortedPrice, BigDecimal price1, BigDecimal price2) {
+    public List<ProductDto> findProducts(String category,
+                                         String name,
+                                         String brand,
+                                         String sortedName,
+                                         String sortedPrice,
+                                         BigDecimal priceFirst,
+                                         BigDecimal priceLast) {
 
         var condition = "";
 
@@ -136,9 +141,9 @@ public class ProductRepositorySqlImpl implements ProductRepository {
             condition += String.format("brand LIKE '%%%s%%'", brand);
         }
 
-        if (price1 != null && price2 != null) {
+        if (priceFirst != null && priceLast != null) {
             condition = getString(condition);
-            condition += String.format("price BETWEEN %s AND %s", price1, price2);
+            condition += String.format("price BETWEEN %s AND %s", priceFirst, priceLast);
         }
 
         if (sortedName != null && (sortedName.equals("ASC") || sortedName.equals("DESC"))) {

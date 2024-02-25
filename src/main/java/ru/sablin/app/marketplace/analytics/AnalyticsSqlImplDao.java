@@ -6,11 +6,10 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
-public class AnalyticsDaoSqlImpl implements AnalyticsDao {
+public class AnalyticsSqlImplDao implements AnalyticsDao {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -31,7 +30,7 @@ public class AnalyticsDaoSqlImpl implements AnalyticsDao {
     }
 
     @Override
-    public List<AnalyticsDtoSumMoney> findNameClientAndSumCashByBrand(String brand) {
+    public List<AnalyticsSumMoneyDto> findNameClientAndSumCashByBrand(String brand) {
 
         return jdbcTemplate.query("""
             SELECT DISTINCT c.name AS client_name, SUM(p.price) AS sum_cash
@@ -40,7 +39,7 @@ public class AnalyticsDaoSqlImpl implements AnalyticsDao {
             WHERE brand = ?
             GROUP BY c.name""",
             ((rs, rowNum) -> {
-                return AnalyticsDtoSumMoney.builder()
+                return AnalyticsSumMoneyDto.builder()
                         .name(rs.getString("client_name"))
                         .sumMoney(rs.getBigDecimal("sum_cash"))
                         .build();
@@ -103,7 +102,7 @@ public class AnalyticsDaoSqlImpl implements AnalyticsDao {
     }
 
     @Override
-    public AnalyticsDtoAvgPrice findAvgPriceByCategory(String category) {
+    public AnalyticsAvgPriceDto findAvgPriceByCategory(String category) {
 
         return jdbcTemplate.queryForObject("""
             SELECT category, AVG(price) AS avg_price
@@ -111,7 +110,7 @@ public class AnalyticsDaoSqlImpl implements AnalyticsDao {
             WHERE category = ?
             GROUP BY category;""",
             ((rs, rowNum) -> {
-                return AnalyticsDtoAvgPrice.builder()
+                return AnalyticsAvgPriceDto.builder()
                         .name(rs.getString("category"))
                         .avgPrice(rs.getBigDecimal("avg_price"))
                         .build();
@@ -119,7 +118,7 @@ public class AnalyticsDaoSqlImpl implements AnalyticsDao {
     }
 
     @Override
-    public AnalyticsDtoMaxPrice findCategoryAndMaxPrice(String category) {
+    public AnalyticsMaxPriceDto findCategoryAndMaxPrice(String category) {
 
         return jdbcTemplate.queryForObject("""
             SELECT category, MAX(price) AS max_price
@@ -127,7 +126,7 @@ public class AnalyticsDaoSqlImpl implements AnalyticsDao {
             WHERE category = ?
             GROUP BY category;""",
             ((rs, rowNum) -> {
-                return AnalyticsDtoMaxPrice.builder()
+                return AnalyticsMaxPriceDto.builder()
                         .name(rs.getString("category"))
                         .maxPrice(rs.getBigDecimal("max_price"))
                         .build();
@@ -135,14 +134,14 @@ public class AnalyticsDaoSqlImpl implements AnalyticsDao {
     }
 
     @Override
-    public List<AnalyticsDtoMaxPrice> findProductByMaxPriceBrand() {
+    public List<AnalyticsMaxPriceDto> findProductByMaxPriceBrand() {
 
         return jdbcTemplate.query("""
             SELECT DISTINCT brand, MAX(price) AS max_price
             FROM Product
             GROUP BY brand;""",
             ((rs, rowNum) -> {
-                return AnalyticsDtoMaxPrice.builder()
+                return AnalyticsMaxPriceDto.builder()
                         .name(rs.getString("brand"))
                         .maxPrice(rs.getBigDecimal("max_price"))
                         .build();
@@ -167,7 +166,7 @@ public class AnalyticsDaoSqlImpl implements AnalyticsDao {
     }
 
     @Override
-    public List<AnalyticsDtoSumMoney> findClientAndCashByStore(Integer storeId) {
+    public List<AnalyticsSumMoneyDto> findClientAndCashByStore(Integer storeId) {
 
         return jdbcTemplate.query("""
             SELECT c.name AS client_name, SUM(p.price) AS sum_cash
@@ -177,7 +176,7 @@ public class AnalyticsDaoSqlImpl implements AnalyticsDao {
             WHERE store_id = ?
             GROUP BY c.name;""",
             ((rs, rowNum) -> {
-                return AnalyticsDtoSumMoney.builder()
+                return AnalyticsSumMoneyDto.builder()
                         .name(rs.getString("client_name"))
                         .sumMoney(rs.getBigDecimal("sum_cash"))
                         .build();
@@ -185,7 +184,7 @@ public class AnalyticsDaoSqlImpl implements AnalyticsDao {
     }
 
     @Override
-    public List<AnalyticsDtoSumMoney> findStoreAndSumCashByBrand(String brand) {
+    public List<AnalyticsSumMoneyDto> findStoreAndSumCashByBrand(String brand) {
         return jdbcTemplate.query("""
             SELECT s.name AS store_name, SUM(p.price) AS sum_cash
             FROM Purchase_history ph
@@ -193,20 +192,10 @@ public class AnalyticsDaoSqlImpl implements AnalyticsDao {
                 JOIN Store s ON p.store_id = s.id
             WHERE p.brand = ?
             GROUP BY s.name;""", ((rs, rowNum) -> {
-            return AnalyticsDtoSumMoney.builder()
+            return AnalyticsSumMoneyDto.builder()
                 .name(rs.getString("store_name"))
                 .sumMoney(rs.getBigDecimal("sum_cash"))
                 .build();
             }), brand);
-    }
-
-    @Override
-    public Map<String, String> findNameClientAndNameStoreByMax(Integer clientId) {
-        return null;
-    }
-
-    @Override
-    public Map<String, String> findNameClientAndNameStoreByMaxCash(Integer clientId) {
-        return null;
     }
 }
