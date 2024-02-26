@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/store")
+@RequestMapping("/stores")
 public class StoreController {
 
     private final StoreRepository repository;
@@ -15,7 +15,7 @@ public class StoreController {
         return repository.findById(id);
     }
 
-    @PostMapping("/create")
+    @PostMapping("/")
     public Store create(@RequestBody Store store) {
         return repository.create(store);
     }

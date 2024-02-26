@@ -55,7 +55,7 @@ class ClientControllerTest {
 
     @Test
     void remove() throws Exception {
-        mockMvc.perform(delete("/client/{id}", createdClient().getId()))
+        mockMvc.perform(delete("/clients/{id}", createdClient().getId()))
                         .andExpect(status().isOk());
 
         verify(repository, times(1)).removeById(createdClient().getId());
@@ -65,7 +65,7 @@ class ClientControllerTest {
     void getById() throws Exception {
         when(repository.findById(createdClient().getId())).thenReturn(createdClient());
 
-        mockMvc.perform(get("/client/")
+        mockMvc.perform(get("/clients/")
                         .param("id", "87"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(createdClient()));

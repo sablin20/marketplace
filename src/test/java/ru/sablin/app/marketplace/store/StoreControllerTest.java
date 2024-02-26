@@ -40,7 +40,7 @@ class StoreControllerTest {
 
         when(repository.findById(1)).thenReturn(storeInDb);
 
-        mockMvc.perform(get("/store/")
+        mockMvc.perform(get("/stores/")
                         .param("id", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(storeInDb));
@@ -56,7 +56,7 @@ class StoreControllerTest {
 
         when(repository.create(store)).thenReturn(store);
 
-        mockMvc.perform(post("/store/create")
+        mockMvc.perform(post("/stores/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(store)))
                 .andExpect(status().isOk())

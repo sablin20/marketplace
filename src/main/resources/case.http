@@ -46,10 +46,10 @@ GET http://localhost:8888/products/buy?id=10&clientId=1&productId=4&amount=2
 ******************* STORE ***************************************************************************************************
 
 ### get store by id
-GET http://localhost:8888/store/?id=900
+GET http://localhost:8888/stores/?id=900
 
 ### create store
-POST http://localhost:8888/store/create
+POST http://localhost:8888/stores/
 Content-Type: application/json
 
 {
