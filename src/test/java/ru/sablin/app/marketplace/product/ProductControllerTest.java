@@ -140,7 +140,7 @@ class ProductControllerTest {
 
         when(repository.buyProduct(18, 77, created_product().getId(), 2)).thenReturn(productDto);
 
-        mockMvc.perform(post("/products/buy")
+        mockMvc.perform(get("/products/buy")
                         .param("id", "18")
                         .param("clientId", "77")
                         .param("productId", "1")
